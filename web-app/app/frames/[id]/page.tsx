@@ -1,16 +1,33 @@
 "use client";
 import React, { useState } from "react";
-import { Box, Center, Grid, Heading } from "@chakra-ui/react";
+import { Box, Button, Center, Grid, Heading, HStack } from "@chakra-ui/react";
 import FrameCard from "@/components/Frames/Frame";
 import Header from "@/components/Header";
 import AdCard from "@/components/Campaigns/CampaignCard";
+import CreateAdModal from "@/components/Campaigns/CreateAdModal";
+import CreateFrameModal from "@/components/Frames/CreateFrameModal";
 
 const Dashboard: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [createAdModal, setCreateAdModal] = useState(false);
+  const [createFrameModal, setCreateFrameModal] = useState(false);
+
+  const handleCreateFrame = () => {
+    setCreateFrameModal(true);
+  };
 
   return (
     <div>
       <Header />
+      <Center paddingTop={2}>
+        <HStack>
+          <Button colorScheme="blue" onClick={handleCreateFrame}>
+            Create Frame
+          </Button>
+          <Button colorScheme="green" onClick={() => setCreateAdModal(true)}>
+            Create Campaign
+          </Button>
+        </HStack>
+      </Center>
       <Box padding={2} paddingLeft={8}>
         <Heading size="lg" textDecoration="underline">
           Casted Frames
@@ -31,6 +48,14 @@ const Dashboard: React.FC = () => {
           <AdCard title="Social Briks" status="ano" />
         </Grid>
       </Box>
+      <CreateAdModal
+        isOpen={createAdModal}
+        onClose={() => setCreateAdModal(false)}
+      />
+      <CreateFrameModal
+        isOpen={createFrameModal}
+        onClose={() => setCreateFrameModal(false)}
+      />
     </div>
   );
 };
