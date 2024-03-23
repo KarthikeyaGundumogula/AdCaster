@@ -17,14 +17,10 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - AdCreated
-        - ApprovalForAll
         - CampaignStarted
         - CampaignStopped
         - PublisherAdded
         - PublisherCreated
-        - TransferBatch
-        - TransferSingle
-        - URI
         - adShowed
         - fundsAdded
         - fundsRemoved
@@ -35,8 +31,6 @@ dataSources:
       eventHandlers:
         - event: AdCreated(uint256,uint256,string,address)
           handler: handleAdCreated
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
         - event: CampaignStarted(uint256)
           handler: handleCampaignStarted
         - event: CampaignStopped(uint256)
@@ -45,12 +39,6 @@ dataSources:
           handler: handlePublisherAdded
         - event: PublisherCreated(uint256,uint256,address,string)
           handler: handlePublisherCreated
-        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
-          handler: handleTransferBatch
-        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
-          handler: handleTransferSingle
-        - event: URI(string,indexed uint256)
-          handler: handleURI
         - event: adShowed(uint256,address,uint256)
           handler: handleadShowed
         - event: fundsAdded(uint256,uint256)
