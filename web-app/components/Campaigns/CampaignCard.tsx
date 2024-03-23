@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import { Box, Image, Heading, Grid, GridItem } from "@chakra-ui/react";
-import FrameModal from "./FrameModal";
+import CampaignModal from "./CampaignModal";
 
 interface AppCardProps {
   title: string;
   status: string;
 }
 
-const FrameCard: React.FC<AppCardProps> = ({ title, status }) => {
+const AdCard: React.FC<AppCardProps> = ({ title, status }) => {
   const logo = `https://picsum.photos/seed/${encodeURIComponent(
     title
   )}/200/300`;
@@ -74,9 +74,9 @@ const FrameCard: React.FC<AppCardProps> = ({ title, status }) => {
           </Grid>{" "}
         </Box>
       </Box>
-      <FrameModal isOpen={isOpen} onClose={handleCloseModal} />
+      <CampaignModal isOpen={isOpen} onClose={handleCloseModal} />
     </>
   );
 };
 
-export default FrameCard;
+export default AdCard;
