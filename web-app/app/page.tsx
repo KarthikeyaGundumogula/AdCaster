@@ -9,13 +9,6 @@ const Dashboard: React.FC = () => {
         <Heading size="lg">Dashboard</Heading>
       </Box>
       <Box alignItems="center" padding={2} paddingLeft={8}>
-        <Grid templateColumns="repeat(3, 2fr)" gap={4}>
-          <FrameCard
-            title="Social Briks"
-            options={["red", "blue", "white", "fuck"]}
-            status="active"
-          />
-        </Grid>
       </Box>
     </div>
   );
