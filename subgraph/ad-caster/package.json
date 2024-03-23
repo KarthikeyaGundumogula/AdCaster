@@ -1,0 +1,18 @@
+{
+  "name": "ad-caster",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ karthikeyagundumogula/ad-caster",
+    "create-local": "graph create --node http://localhost:8020/ karthikeyagundumogula/ad-caster",
+    "remove-local": "graph remove --node http://localhost:8020/ karthikeyagundumogula/ad-caster",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 karthikeyagundumogula/ad-caster",
+    "test": "graph test"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.69.0",
+    "@graphprotocol/graph-ts": "0.32.0"
+  },
+  "devDependencies": { "matchstick-as": "0.5.0" }
+}

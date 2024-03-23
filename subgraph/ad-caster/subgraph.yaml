@@ -1,0 +1,62 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Caster
+    network: base-sepolia
+    source:
+      address: "0xdcacf6D558B59e46C3aBAE03E72f4879D2E4fC96"
+      abi: Caster
+      startBlock: 7725576
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - AdCreated
+        - ApprovalForAll
+        - CampaignStarted
+        - CampaignStopped
+        - PublisherAdded
+        - PublisherCreated
+        - TransferBatch
+        - TransferSingle
+        - URI
+        - adShowed
+        - fundsAdded
+        - fundsRemoved
+        - leadGenerated
+      abis:
+        - name: Caster
+          file: ./abis/Caster.json
+      eventHandlers:
+        - event: AdCreated(uint256,uint256,string,address)
+          handler: handleAdCreated
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: CampaignStarted(uint256)
+          handler: handleCampaignStarted
+        - event: CampaignStopped(uint256)
+          handler: handleCampaignStopped
+        - event: PublisherAdded(uint256,address)
+          handler: handlePublisherAdded
+        - event: PublisherCreated(uint256,uint256,address,string)
+          handler: handlePublisherCreated
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+        - event: URI(string,indexed uint256)
+          handler: handleURI
+        - event: adShowed(uint256,address,uint256)
+          handler: handleadShowed
+        - event: fundsAdded(uint256,uint256)
+          handler: handlefundsAdded
+        - event: fundsRemoved(uint256,uint256)
+          handler: handlefundsRemoved
+        - event: leadGenerated(uint256,address,uint256)
+          handler: handleleadGenerated
+      file: ./src/caster.ts
