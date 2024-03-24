@@ -6,12 +6,11 @@ import CampaignModal from "./CampaignModal";
 interface AppCardProps {
   title: string;
   status: string;
+  AdId: string;
 }
 
-const AdCard: React.FC<AppCardProps> = ({ title, status }) => {
-  const logo = `https://picsum.photos/seed/${encodeURIComponent(
-    title
-  )}/200/300`;
+const AdCard: React.FC<AppCardProps> = ({ title, status, AdId }) => {
+  const logo = `https://picsum.photos/seed/${encodeURIComponent(AdId)}/200/300`;
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -74,7 +73,7 @@ const AdCard: React.FC<AppCardProps> = ({ title, status }) => {
           </Grid>{" "}
         </Box>
       </Box>
-      <CampaignModal isOpen={isOpen} onClose={handleCloseModal} />
+      <CampaignModal isOpen={isOpen} onClose={handleCloseModal} AdId={AdId} />
     </>
   );
 };

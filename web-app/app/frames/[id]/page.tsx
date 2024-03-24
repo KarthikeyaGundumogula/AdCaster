@@ -6,19 +6,50 @@ import Header from "@/components/Header";
 import AdCard from "@/components/Campaigns/CampaignCard";
 import CreateAdModal from "@/components/Campaigns/CreateAdModal";
 import CreateFrameModal from "@/components/Frames/CreateFrameModal";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
+import { getGraphData } from "@/utils/GetData";
 
 const Dashboard: React.FC = () => {
   const [createAdModal, setCreateAdModal] = useState(false);
   const [createFrameModal, setCreateFrameModal] = useState(false);
+  const [frames, setFrames] = useState([]);
+  const [ads, setAds] = useState([]);
   const [user, setUser] = useState("");
-  const path = useParams().id;
+  const path = useParams();
 
   useEffect(() => {
-    console.log(path);
-  });
+    async function getUser() {
+      setUser(path.id.toString());
+      const query = `  
+      {
+        ads(
+    first: 10
+    where: {Advertiser: "${path.id}"}
+  ) {
+    AdData
+    AdId
+  }
+  frames(where: {FrameOwner: "${path.id}"}) {
+    FrameId
+  }
+      }
+      `;
+      const data = await getGraphData(query);
+      if (data != undefined) {
+        console.log();
+        setFrames(data.data.data.frames);
+        setAds(data.data.data.ads);
+      }
+      console.log(ads);
+    }
+    getUser();
+  }, [user]);
   const handleCreateFrame = () => {
     setCreateFrameModal(true);
+  };
+
+  const handleCreateAd = () => {
+    setCreateAdModal(true);
   };
 
   return (
@@ -29,7 +60,7 @@ const Dashboard: React.FC = () => {
           <Button colorScheme="blue" onClick={handleCreateFrame}>
             Create Frame
           </Button>
-          <Button colorScheme="green" onClick={() => setCreateAdModal(true)}>
+          <Button colorScheme="green" onClick={handleCreateAd}>
             Create Campaign
           </Button>
         </HStack>
@@ -41,7 +72,9 @@ const Dashboard: React.FC = () => {
       </Box>
       <Box alignItems="center" padding={2} paddingLeft={8}>
         <Grid templateColumns="repeat(4, 2fr)" gap={4}>
-          <FrameCard title="Social Briks" status="ano" />
+          {frames.map((frame: { FrameId: string }) => (
+            <FrameCard frameId={frame.FrameId} status="active" title="test" />
+          ))}
         </Grid>
       </Box>
       <Box padding={2} paddingLeft={8}>
@@ -51,7 +84,9 @@ const Dashboard: React.FC = () => {
       </Box>
       <Box alignItems="center" padding={2} paddingLeft={8}>
         <Grid templateColumns="repeat(4, 2fr)" gap={4}>
-          <AdCard title="Social Briks" status="ano" />
+          {ads.map((ad: { AdId: string }) => (
+            <AdCard AdId={ad.AdId} status="active" title="test" />
+          ))}
         </Grid>
       </Box>
       <CreateAdModal

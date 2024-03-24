@@ -19,9 +19,14 @@ import {
 interface CampaignModalProps {
   isOpen: boolean;
   onClose: () => void;
+  AdId: string;
 }
 
-const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose }) => {
+const CampaignModal: React.FC<CampaignModalProps> = ({
+  isOpen,
+  onClose,
+  AdId,
+}) => {
   let title = "Frame";
   const logo = `https://picsum.photos/seed/${encodeURIComponent(
     title

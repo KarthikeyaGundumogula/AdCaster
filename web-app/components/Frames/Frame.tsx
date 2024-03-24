@@ -6,11 +6,12 @@ import FrameModal from "./FrameModal";
 interface AppCardProps {
   title: string;
   status: string;
+  frameId: string;
 }
 
-const FrameCard: React.FC<AppCardProps> = ({ title, status }) => {
+const FrameCard: React.FC<AppCardProps> = ({ title, status, frameId }) => {
   const logo = `https://picsum.photos/seed/${encodeURIComponent(
-    title
+    frameId
   )}/200/300`;
 
   const [isOpen, setIsOpen] = useState(false);

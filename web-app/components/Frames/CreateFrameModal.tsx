@@ -9,57 +9,57 @@ import {
   ModalBody,
   ModalCloseButton,
   Input,
+  Box,
+  VStack,
 } from "@chakra-ui/react";
+import { BrowserProvider, Contract } from "ethers";
+import { Address, ABI } from "@/Constants/ContractDetails";
+import { pinFileToIPFS } from "@/utils/saveFileToIPFS";
 
 interface CreateAdModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const CreateAdModal: React.FC<CreateAdModalProps> = ({ isOpen, onClose }) => {
+const CreateFrameModal: React.FC<CreateAdModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const [input1, setInput1] = useState("");
-  const [input2, setInput2] = useState("");
-  const [input3, setInput3] = useState("");
+  const [input3, setInput3] = useState<File | null>(null);
 
   const handleInputChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput1(e.target.value);
   };
 
-  const handleInputChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput2(e.target.value);
-  };
-
   const handleInputChange3 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput3(e.target.value);
+    if (e.target.files) {
+      setInput3(e.target.files[0]);
+    }
   };
 
-  const handleSubmit = () => {
-    // Handle form submission here
-    // You can access the input values using input1, input2, input3
-  };
+  const handleSubmit = () => {};
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create Ad</ModalHeader>
+        <ModalHeader>Create Frame</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Input
-            placeholder="Name"
-            value={input1}
-            onChange={handleInputChange1}
-          />
-          <Input
-            placeholder="Description"
-            value={input2}
-            onChange={handleInputChange2}
-          />
-          <Input
-            type="file"
-            placeholder="Input 3"
-            onChange={handleInputChange3}
-          />
+          <VStack spacing={2}>
+            <Input
+              placeholder="Ad-Id"
+              value={input1}
+              onChange={handleInputChange1}
+            />
+            <Input
+              type="file"
+              placeholder="Input 3"
+              onChange={handleInputChange3}
+            />
+            <Box>"Your Frame URL"</Box>
+          </VStack>
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
@@ -72,4 +72,4 @@ const CreateAdModal: React.FC<CreateAdModalProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default CreateAdModal;
+export default CreateFrameModal;
