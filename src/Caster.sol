@@ -29,6 +29,10 @@ struct Publisher {
     uint256[] AdIds;
 }
 
+struct Frames {
+    uint256 frameId;
+}
+
 contract Caster is Token, ERC1155Holder {
     address public owner;
     uint256 public nativeTokenId;
@@ -40,6 +44,7 @@ contract Caster is Token, ERC1155Holder {
     mapping(address => uint256[]) public AdIdsListByAdvertiser;
     mapping(uint256 => mapping(address => bool)) IsPublisherAdded;
     mapping(address => bool) public IsPublisher;
+    mapping(address => Frames[]) public addressToFrames;
 
     event AdCreated(
         uint256 id,
@@ -65,6 +70,7 @@ contract Caster is Token, ERC1155Holder {
     );
 
     event adShowed(uint256 Adid, address publisher, uint reward);
+    event frameCreated(uint256 frameId, address publisher);
 
     constructor() {
         nativeTokenId = 0;
@@ -74,6 +80,13 @@ contract Caster is Token, ERC1155Holder {
 
     function getAdTokens() external {
         _mint(msg.sender, 0, 100, "");
+    }
+
+    function createFrame(uint256 _frameId) public {
+        //this function creates a frame
+        Frames memory frame = Frames(_frameId);
+        addressToFrames[msg.sender].push(frame);
+        emit frameCreated(_frameId, msg.sender);
     }
 
     function createAd(string memory _AdURI, uint256 _totalFunds) public {

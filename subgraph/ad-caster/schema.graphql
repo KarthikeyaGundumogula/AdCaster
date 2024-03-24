@@ -1,4 +1,4 @@
-type AdCreated @entity(immutable: true) {
+type Ad @entity(immutable: true) {
   id: Bytes!
   Caster_id: BigInt! # uint256
   totalFunds: BigInt! # uint256
@@ -9,118 +9,17 @@ type AdCreated @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type ApprovalForAll @entity(immutable: true) {
-  id: Bytes!
-  account: Bytes! # address
-  operator: Bytes! # address
-  approved: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type CampaignStarted @entity(immutable: true) {
+type Frame @entity(immutable: true) {
   id: Bytes!
   Caster_id: BigInt! # uint256
+  FrameURI: String! # string
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
 
-type CampaignStopped @entity(immutable: true) {
-  id: Bytes!
-  Caster_id: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type PublisherAdded @entity(immutable: true) {
-  id: Bytes!
-  Caster_id: BigInt! # uint256
-  publisher: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type PublisherCreated @entity(immutable: true) {
-  id: Bytes!
-  clickReward: BigInt! # uint256
-  displayReward: BigInt! # uint256
-  publisher: Bytes! # address
-  fid: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type TransferBatch @entity(immutable: true) {
-  id: Bytes!
-  operator: Bytes! # address
-  from: Bytes! # address
-  to: Bytes! # address
-  ids: [BigInt!]! # uint256[]
-  values: [BigInt!]! # uint256[]
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type TransferSingle @entity(immutable: true) {
-  id: Bytes!
-  operator: Bytes! # address
-  from: Bytes! # address
-  to: Bytes! # address
-  Caster_id: BigInt! # uint256
-  value: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type URI @entity(immutable: true) {
-  id: Bytes!
-  value: String! # string
-  Caster_id: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type adShowed @entity(immutable: true) {
-  id: Bytes!
-  Adid: BigInt! # uint256
-  publisher: Bytes! # address
-  reward: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type fundsAdded @entity(immutable: true) {
-  id: Bytes!
-  Caster_id: BigInt! # uint256
-  AddedAmount: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type fundsRemoved @entity(immutable: true) {
-  id: Bytes!
-  Caster_id: BigInt! # uint256
-  RemovedAmount: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type leadGenerated @entity(immutable: true) {
-  id: Bytes!
-  Caster_id: BigInt! # uint256
-  publisher: Bytes! # address
-  ClickReward: BigInt! # uint256
+type Publisher @entity(immutable: true) {
+  id: Bytes! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

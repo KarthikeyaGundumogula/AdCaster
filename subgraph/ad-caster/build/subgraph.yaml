@@ -2,7 +2,7 @@ specVersion: 1.0.0
 indexerHints:
   prune: auto
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: Caster
@@ -21,7 +21,7 @@ dataSources:
         - Publisher
       abis:
         - name: Caster
-          file: ./abis/Caster.json
+          file: Caster/abis/Caster.json
       eventHandlers:
         - event: AdCreated(uint256,uint256,string,address)
           handler: handleAdCreated
@@ -43,4 +43,4 @@ dataSources:
           handler: handleleadGenerated
         - event: frameCreated(string,address)
           handler: handleframeCreated
-      file: ./src/caster.ts
+      file: Caster/Caster.wasm
