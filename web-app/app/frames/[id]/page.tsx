@@ -1,16 +1,22 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Center, Grid, Heading, HStack } from "@chakra-ui/react";
 import FrameCard from "@/components/Frames/Frame";
 import Header from "@/components/Header";
 import AdCard from "@/components/Campaigns/CampaignCard";
 import CreateAdModal from "@/components/Campaigns/CreateAdModal";
 import CreateFrameModal from "@/components/Frames/CreateFrameModal";
+import { useRouter, useParams } from "next/navigation";
 
 const Dashboard: React.FC = () => {
   const [createAdModal, setCreateAdModal] = useState(false);
   const [createFrameModal, setCreateFrameModal] = useState(false);
+  const [user, setUser] = useState("");
+  const path = useParams().id;
 
+  useEffect(() => {
+    console.log(path);
+  });
   const handleCreateFrame = () => {
     setCreateFrameModal(true);
   };

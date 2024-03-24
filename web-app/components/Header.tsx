@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -10,8 +11,18 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import logo from "@/public/Assets/logo.png";
+import { BrowserProvider } from "ethers";
 
 const Header = () => {
+  const [user, setUser] = useState("");
+  useEffect(() => {
+    const acc = new BrowserProvider((window as any).ethereum);
+    async function getUser() {
+      const user = await acc.getSigner();
+      setUser(user.address);
+    }
+    getUser();
+  });
   return (
     <header style={{ width: "100%" }}>
       <Flex alignItems="center" padding={2}>
@@ -35,22 +46,22 @@ const Header = () => {
           <Flex alignItems="center">
             <Spacer />
             <HStack spacing={12}>
-              <Link href="/frames/fuckyoucanada">
+              <Link href={`/frames/${user}`}>
                 <Heading fontSize={"l"} fontWeight={"bold"}>
                   Frames
                 </Heading>
               </Link>
-              <Link href="/storage-providers">
+              <Link href="/farcaster-creators">
                 <Heading fontSize={"l"} fontWeight={"bold"}>
                   Farcaster Creators
                 </Heading>
               </Link>
-              <Link href="/about">
+              <Link href="/">
                 <Heading fontSize={"l"} fontWeight={"bold"}>
                   About
                 </Heading>
               </Link>
-              <Link href="/profile">
+              <Link href={`/profile/${user}`}>
                 <Box>
                   <Circle size="40px" bg="green.500" />
                 </Box>
