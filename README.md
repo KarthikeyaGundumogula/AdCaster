@@ -1,4 +1,4 @@
 # AdCaster
 Ad network for farcaster ecosystem
 
-Caster Base Contract - 0x6bcf0F3bE2cf1c07F507964d4991Ae5Ff74Be764
+Caster Base Contract - 0xecFBf18e6A318309B717b657Ea711ddA8946c3fe

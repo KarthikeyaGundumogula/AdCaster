@@ -1,26 +1,43 @@
-type Ad @entity(immutable: true) {
-  id: Bytes!
-  Caster_id: BigInt! # uint256
-  totalFunds: BigInt! # uint256
-  AdURI: String! # string
-  Advertiser: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Ad @entity {
+  id: ID!
+  AdId: BigInt! #uint256
+  Advertiser: Bytes! #Address
+  TotalFunds: BigInt! #uint256
+  CurrentFunds: BigInt! #uint256
+  TotalClicks: BigInt! #uint256
+  TotalViews: BigInt! #uint256
+  Publishers: [Bytes!]! #uint256[]
+  AdData: String! #string
+  AdStatus: Boolean! #bool
+  BlockNumber: BigInt! #uint256
+  BlockTimestamp: BigInt! #uint256
+  TransactionHash: Bytes! #bytes32
 }
 
-type Frame @entity(immutable: true) {
-  id: Bytes!
-  Caster_id: BigInt! # uint256
-  FrameURI: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Publisher @entity {
+  id: ID!
+  PublisherFId: String! #string
+  Publisher: Bytes! #Address
+  TotalEarnings: BigInt! #uint256
+  TotalLeadEarnings: BigInt! #uint256
+  TotalDisplayEarnings: BigInt! #uint256
+  UnClaimedEarnings: BigInt! #uint256
+  ClickReward: BigInt! #uint256
+  ViewReward: BigInt! #uint256
+  Ads: [BigInt!]! #uint256[]
+  BlockNumber: BigInt! #uint256
+  BlockTimestamp: BigInt! #uint256
+  TransactionHash: Bytes! #bytes32
 }
 
-type Publisher @entity(immutable: true) {
-  id: Bytes! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Frame @entity {
+  id: ID!
+  FrameId: String! #uint256
+  FrameOwner: Bytes! #Address
+  AdId: BigInt! #uint256
+  TotalViews: BigInt! #uint256
+  TotalClicks: BigInt! #uint256
+  BlockNumber: BigInt! #uint256
+  BlockTimestamp: BigInt! #uint256
+  TransactionHash: Bytes! #bytes32
 }

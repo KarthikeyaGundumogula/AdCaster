@@ -8,9 +8,9 @@ dataSources:
     name: Caster
     network: base-sepolia
     source:
-      address: "0x6bcf0F3bE2cf1c07F507964d4991Ae5Ff74Be764"
+      address: "0xecFBf18e6A318309B717b657Ea711ddA8946c3fe"
       abi: Caster
-      startBlock: 7740018
+      startBlock: 7742160
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -33,14 +33,14 @@ dataSources:
           handler: handlePublisherAdded
         - event: PublisherCreated(uint256,uint256,address,string)
           handler: handlePublisherCreated
-        - event: adShowed(uint256,address,uint256)
+        - event: adShowed(uint256,address,uint256,string)
           handler: handleadShowed
         - event: fundsAdded(uint256,uint256)
           handler: handlefundsAdded
         - event: fundsRemoved(uint256,uint256)
           handler: handlefundsRemoved
-        - event: leadGenerated(uint256,address,uint256)
+        - event: leadGenerated(uint256,address,uint256,string)
           handler: handleleadGenerated
-        - event: frameCreated(string,address)
+        - event: frameCreated(string,address,uint256)
           handler: handleframeCreated
       file: Caster/Caster.wasm

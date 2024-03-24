@@ -30,7 +30,11 @@ struct Publisher {
 }
 
 struct Frames {
-    uint256 frameId;
+    string frameId;
+    uint AdId;
+    uint256 clicks;
+    uint256 views;
+    address publisher;
 }
 
 contract Caster is Token, ERC1155Holder {
@@ -44,7 +48,7 @@ contract Caster is Token, ERC1155Holder {
     mapping(address => uint256[]) public AdIdsListByAdvertiser;
     mapping(uint256 => mapping(address => bool)) IsPublisherAdded;
     mapping(address => bool) public IsPublisher;
-    mapping(address => Frames[]) public addressToFrames;
+    mapping(string => Frames) public frameIdToFrame;
 
     event AdCreated(
         uint256 id,
@@ -53,7 +57,12 @@ contract Caster is Token, ERC1155Holder {
         address Advertiser
     );
 
-    event leadGenerated(uint256 id, address publisher, uint256 ClickReward);
+    event leadGenerated(
+        uint256 id,
+        address publisher,
+        uint256 ClickReward,
+        string frameId
+    );
     event CampaignStarted(uint256 id);
     event CampaignStopped(uint256 id);
     event PublisherAdded(uint256 id, address publisher);
@@ -69,8 +78,13 @@ contract Caster is Token, ERC1155Holder {
         string fid
     );
 
-    event adShowed(uint256 Adid, address publisher, uint reward);
-    event frameCreated(uint256 frameId, address publisher);
+    event adShowed(
+        uint256 Adid,
+        address publisher,
+        uint reward,
+        string frameId
+    );
+    event frameCreated(string frameId, address publisher, uint AdId);
 
     constructor() {
         nativeTokenId = 0;
@@ -82,11 +96,14 @@ contract Caster is Token, ERC1155Holder {
         _mint(msg.sender, 0, 100, "");
     }
 
-    function createFrame(uint256 _frameId) public {
+    function createFrame(string memory _frameId, uint _adId) public {
         //this function creates a frame
-        Frames memory frame = Frames(_frameId);
-        addressToFrames[msg.sender].push(frame);
-        emit frameCreated(_frameId, msg.sender);
+        require(
+            IsPublisher[msg.sender] == true,
+            "You are not a publisher, please register as a publisher"
+        );
+        frameIdToFrame[_frameId] = Frames(_frameId, _adId, 0, 0, msg.sender);
+        emit frameCreated(_frameId, msg.sender, _adId);
     }
 
     function createAd(string memory _AdURI, uint256 _totalFunds) public {
@@ -227,7 +244,8 @@ contract Caster is Token, ERC1155Holder {
 
     function serveAd(
         uint256 _id,
-        address _publisher
+        address _publisher,
+        string memory _frameId
     ) public returns (string memory adURI) {
         //this function serves the Ad to the user
 
@@ -243,12 +261,18 @@ contract Caster is Token, ERC1155Holder {
         emit adShowed(
             _id,
             _publisher,
-            addressToPublisher[_publisher].showReward
+            addressToPublisher[_publisher].showReward,
+            _frameId
         );
+        frameIdToFrame[_frameId].views += 1;
         return uri(_id);
     }
 
-    function transferClickReward(uint256 _adID, address _publisher) public {
+    function transferClickReward(
+        uint256 _adID,
+        address _publisher,
+        string memory _frameId
+    ) public {
         //this function transfers the click reward to the publisher
         IdToCampaign[_adID].totalFunds -= addressToPublisher[_publisher]
             .leadReward;
@@ -261,10 +285,12 @@ contract Caster is Token, ERC1155Holder {
             _publisher
         ].leadReward;
         IdToCampaign[_adID].clicks += 1;
+        frameIdToFrame[_frameId].clicks += 1;
         emit leadGenerated(
             _adID,
             _publisher,
-            addressToPublisher[_publisher].leadReward
+            addressToPublisher[_publisher].leadReward,
+            _frameId
         );
     }
 

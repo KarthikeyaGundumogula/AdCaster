@@ -48,6 +48,11 @@
         "internalType": "string",
         "name": "_frameId",
         "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_adId",
+        "type": "uint256"
       }
     ],
     "name": "createFrame",
@@ -446,6 +451,11 @@
         "internalType": "address",
         "name": "_publisher",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_frameId",
+        "type": "string"
       }
     ],
     "name": "serveAd",
@@ -585,6 +595,12 @@
         "internalType": "uint256",
         "name": "reward",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "frameId",
+        "type": "string"
       }
     ],
     "name": "adShowed",
@@ -604,6 +620,12 @@
         "internalType": "address",
         "name": "publisher",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "AdId",
+        "type": "uint256"
       }
     ],
     "name": "frameCreated",
@@ -667,6 +689,12 @@
         "internalType": "uint256",
         "name": "ClickReward",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "frameId",
+        "type": "string"
       }
     ],
     "name": "leadGenerated",
@@ -783,35 +811,16 @@
         "internalType": "address",
         "name": "_publisher",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_frameId",
+        "type": "string"
       }
     ],
     "name": "transferClickReward",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "addressToFrames",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "frameId",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -962,6 +971,45 @@
         "internalType": "enum CampaignStatus",
         "name": "",
         "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "name": "frameIdToFrame",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "frameId",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "AdId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "clicks",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "views",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "publisher",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
