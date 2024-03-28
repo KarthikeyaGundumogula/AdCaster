@@ -16,38 +16,19 @@ const EarningsComponent = () => {
           <GridItem>
             <Box
               height={200}
-              borderBlockStart={1}
-              borderWidth={2}
-              borderColor={"black"}
               padding={10}
               borderRadius={12}
-              boxShadow={"xl"}
               _hover={{
                 height: 220,
+                width: "calc(100% + 10px)",
+                transform: "translateY(-10px)",
               }}
-            >
-              <Center>
-                <Box>
-                  <Heading> No.Of Frames</Heading>
-                  <Box>
-                    0.
-                    <Box as="span">00</Box>
-                  </Box>
-                </Box>
-              </Center>
-            </Box>
-          </GridItem>
-          <GridItem>
-            <Box
-              height={200}
-              borderBlockStart={1}
-              borderWidth={2}
-              borderColor={"black"}
-              padding={10}
-              borderRadius={12}
-              boxShadow={"xl"}
-              _hover={{
-                height: 220,
+              sx={{
+                opacity: 0.8,
+                backdropFilter: "blur(2px)",
+                backgroundImage:
+                  "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+                border: "1px solid rgba(240, 80, 39, .3)",
               }}
             >
               <Center>
@@ -64,19 +45,24 @@ const EarningsComponent = () => {
           <GridItem>
             <Box
               height={200}
-              borderBlockStart={1}
-              borderWidth={2}
-              borderColor={"black"}
               padding={10}
               borderRadius={12}
-              boxShadow={"xl"}
               _hover={{
                 height: 220,
+                width: "calc(100% + 10px)",
+                transform: "translateY(-10px)",
+              }}
+              sx={{
+                opacity: 0.8,
+                backdropFilter: "blur(2px)",
+                backgroundImage:
+                  "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+                border: "1px solid rgba(240, 80, 39, .3)",
               }}
             >
               <Center>
                 <Box>
-                  <Heading> ADCAST Balance</Heading>
+                  <Heading> Total Ads</Heading>
                   <Box>
                     0.
                     <Box as="span">00</Box>
@@ -88,19 +74,24 @@ const EarningsComponent = () => {
           <GridItem>
             <Box
               height={200}
-              borderBlockStart={1}
-              borderWidth={2}
-              borderColor={"black"}
               padding={10}
               borderRadius={12}
-              boxShadow={"xl"}
               _hover={{
                 height: 220,
+                width: "calc(100% + 10px)",
+                transform: "translateY(-10px)",
+              }}
+              sx={{
+                opacity: 0.8,
+                backdropFilter: "blur(2px)",
+                backgroundImage:
+                  "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+                border: "1px solid rgba(240, 80, 39, .3)",
               }}
             >
               <Center>
                 <Box>
-                  <Heading> Click Rewards</Heading>
+                  <Heading> Total Ads</Heading>
                   <Box>
                     0.
                     <Box as="span">00</Box>
@@ -112,19 +103,24 @@ const EarningsComponent = () => {
           <GridItem>
             <Box
               height={200}
-              borderBlockStart={1}
-              borderWidth={2}
-              borderColor={"black"}
               padding={10}
               borderRadius={12}
-              boxShadow={"xl"}
               _hover={{
                 height: 220,
+                width: "calc(100% + 10px)",
+                transform: "translateY(-10px)",
+              }}
+              sx={{
+                opacity: 0.8,
+                backdropFilter: "blur(2px)",
+                backgroundImage:
+                  "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+                border: "1px solid rgba(240, 80, 39, .3)",
               }}
             >
               <Center>
                 <Box>
-                  <Heading> View Rewards</Heading>
+                  <Heading> Total Ads</Heading>
                   <Box>
                     0.
                     <Box as="span">00</Box>
@@ -136,19 +132,53 @@ const EarningsComponent = () => {
           <GridItem>
             <Box
               height={200}
-              borderBlockStart={1}
-              borderWidth={2}
-              borderColor={"black"}
               padding={10}
               borderRadius={12}
-              boxShadow={"xl"}
               _hover={{
                 height: 220,
+                width: "calc(100% + 10px)",
+                transform: "translateY(-10px)",
+              }}
+              sx={{
+                opacity: 0.8,
+                backdropFilter: "blur(2px)",
+                backgroundImage:
+                  "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+                border: "1px solid rgba(240, 80, 39, .3)",
               }}
             >
               <Center>
                 <Box>
-                  <Heading> Ad Cost</Heading>
+                  <Heading> Total Ads</Heading>
+                  <Box>
+                    0.
+                    <Box as="span">00</Box>
+                  </Box>
+                </Box>
+              </Center>
+            </Box>
+          </GridItem>
+          <GridItem>
+            <Box
+              height={200}
+              padding={10}
+              borderRadius={12}
+              _hover={{
+                height: 220,
+                width: "calc(100% + 10px)",
+                transform: "translateY(-10px)",
+              }}
+              sx={{
+                opacity: 0.8,
+                backdropFilter: "blur(2px)",
+                backgroundImage:
+                  "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+                border: "1px solid rgba(240, 80, 39, .3)",
+              }}
+            >
+              <Center>
+                <Box>
+                  <Heading> Total Ads</Heading>
                   <Box>
                     0.
                     <Box as="span">00</Box>

@@ -16,24 +16,22 @@ import { BrowserProvider } from "ethers";
 const Header = () => {
   const [user, setUser] = useState("");
   useEffect(() => {
-    const acc = new BrowserProvider((window as any).ethereum);
-    async function getUser() {
-      const user = await acc.getSigner();
-      setUser(user.address);
+    try {
+      const acc = new BrowserProvider((window as any).ethereum);
+      const getUser = async () => {
+        const user = await acc.getSigner();
+        setUser(user.address);
+      };
+      getUser();
+    } catch (error) {
+      console.log(error);
     }
-    getUser();
   });
   return (
     <header style={{ width: "100%" }}>
-      <Flex alignItems="center" padding={2}>
-        <Box>
-          <Image
-            src={logo.src}
-            alt="Logo"
-            height={20}
-            width={20}
-            paddingTop={4}
-          />
+      <Flex alignItems="center" padding={4}>
+        <Box pr={2}>
+          <Image src={logo.src} alt="Logo" />
         </Box>
         <Box>
           <Heading fontSize="36" fontWeight="bold">
