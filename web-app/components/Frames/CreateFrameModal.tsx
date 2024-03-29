@@ -9,7 +9,7 @@ import {
   ModalBody,
   ModalCloseButton,
   Input,
-  Box,
+  Text,
   VStack,
 } from "@chakra-ui/react";
 
@@ -56,7 +56,7 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
               value={input3 ? input3.name : ""}
               onChange={handleInputChange3}
             />
-            <Box>"Your Frame URL"</Box>
+            <Text>Your Frame URL</Text>
           </VStack>
         </ModalBody>
         <ModalFooter>
