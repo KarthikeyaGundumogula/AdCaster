@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import logo from "@/public/Assets/logo.png";
 import { BrowserProvider } from "ethers";
+import {use}
 
 const Header = () => {
   const [user, setUser] = useState("");
@@ -44,17 +45,36 @@ const Header = () => {
           <Flex alignItems="center">
             <Spacer />
             <HStack spacing={12}>
-              <Link href={`/frames/${user}`}>
+              <Link
+                href={`/frames/${user}`}
+                textDecoration={
+                  window.location.pathname === `/frames/${user}`
+                    ? "underline"
+                    : "none"
+                }
+              >
                 <Heading fontSize={"l"} fontWeight={"bold"}>
                   Frames
                 </Heading>
               </Link>
-              <Link href="/farcaster-creators">
+              <Link
+                href="/farcaster-creators"
+                textDecoration={
+                  window.location.pathname === "/farcaster-creators"
+                    ? "underline"
+                    : "none"
+                }
+              >
                 <Heading fontSize={"l"} fontWeight={"bold"}>
                   Farcaster Creators
                 </Heading>
               </Link>
-              <Link href="/">
+              <Link
+                href="/"
+                textDecoration={
+                  window.location.pathname === "/" ? "underline" : "none"
+                }
+              >
                 <Heading fontSize={"l"} fontWeight={"bold"}>
                   About
                 </Heading>

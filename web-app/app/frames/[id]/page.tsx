@@ -57,10 +57,20 @@ const Dashboard: React.FC = () => {
       <Header />
       <Center paddingTop={2}>
         <HStack>
-          <Button colorScheme="blue" onClick={handleCreateFrame}>
+          <Button
+            isLoading={false}
+            loadingText={"Creating Frame"}
+            colorScheme="teal"
+            variant={"outline"}
+            onClick={handleCreateFrame}
+          >
             Create Frame
           </Button>
-          <Button colorScheme="green" onClick={handleCreateAd}>
+          <Button
+            colorScheme="orange"
+            variant={"outline"}
+            onClick={handleCreateAd}
+          >
             Create Campaign
           </Button>
         </HStack>

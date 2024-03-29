@@ -62,7 +62,7 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
           </VStack>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
+          <Button colorScheme="orange" variant={"outline"} mr={3} onClick={handleSubmit}>
             Create
           </Button>
           <Button onClick={onClose}>Cancel</Button>
