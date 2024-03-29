@@ -12,9 +12,6 @@ import {
   Box,
   VStack,
 } from "@chakra-ui/react";
-import { BrowserProvider, Contract } from "ethers";
-import { Address, ABI } from "@/Constants/ContractDetails";
-import { pinFileToIPFS } from "@/utils/saveFileToIPFS";
 
 interface CreateAdModalProps {
   isOpen: boolean;

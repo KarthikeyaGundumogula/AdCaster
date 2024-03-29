@@ -12,12 +12,14 @@ import {
 } from "@chakra-ui/react";
 import logo from "@/public/Assets/logo.png";
 import { BrowserProvider } from "ethers";
-import {use}
+import { useParams } from "next/navigation";
 
 const Header = () => {
   const [user, setUser] = useState("");
+  const path = useParams();
   useEffect(() => {
     try {
+      console.log(path);
       const acc = new BrowserProvider((window as any).ethereum);
       const getUser = async () => {
         const user = await acc.getSigner();
@@ -45,37 +47,45 @@ const Header = () => {
           <Flex alignItems="center">
             <Spacer />
             <HStack spacing={12}>
-              <Link
-                href={`/frames/${user}`}
-                textDecoration={
-                  window.location.pathname === `/frames/${user}`
-                    ? "underline"
-                    : "none"
-                }
-              >
-                <Heading fontSize={"l"} fontWeight={"bold"}>
-                  Frames
+              <Link href={`/dashboard/${user}`}>
+                <Heading
+                  fontSize={"l"}
+                  fontWeight={"bold"}
+                  textDecoration={
+                    typeof window !== "undefined" &&
+                    window.location.pathname === `/dashboard/${user}`
+                      ? "underline"
+                      : "none"
+                  }
+                >
+                  Dashboard
                 </Heading>
               </Link>
-              <Link
-                href="/farcaster-creators"
-                textDecoration={
-                  window.location.pathname === "/farcaster-creators"
-                    ? "underline"
-                    : "none"
-                }
-              >
-                <Heading fontSize={"l"} fontWeight={"bold"}>
+              <Link href="/farcaster-creators">
+                <Heading
+                  fontSize={"l"}
+                  fontWeight={"bold"}
+                  textDecoration={
+                    typeof window !== "undefined" &&
+                    window.location.pathname === "/farcaster-creators"
+                      ? "underline"
+                      : "none"
+                  }
+                >
                   Farcaster Creators
                 </Heading>
               </Link>
-              <Link
-                href="/"
-                textDecoration={
-                  window.location.pathname === "/" ? "underline" : "none"
-                }
-              >
-                <Heading fontSize={"l"} fontWeight={"bold"}>
+              <Link href="/">
+                <Heading
+                  fontSize={"l"}
+                  fontWeight={"bold"}
+                  textDecoration={
+                    typeof window != "undefined" &&
+                    window.location.pathname === "/"
+                      ? "underline"
+                      : "none"
+                  }
+                >
                   About
                 </Heading>
               </Link>

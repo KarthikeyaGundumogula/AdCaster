@@ -14,6 +14,7 @@ import {
   GridItem,
   HStack,
   Center,
+  Text,
 } from "@chakra-ui/react";
 
 interface FrameModalProps {
@@ -40,8 +41,19 @@ const FrameModal: React.FC<FrameModalProps> = ({ isOpen, onClose }) => {
     <>
       <Modal isOpen={isOpen} onClose={onClose} size="75%" isCentered={true}>
         <ModalOverlay />
-        <ModalContent height="500px" width="85%">
-          <ModalHeader>Frame Options</ModalHeader>
+        <ModalContent
+          height="500px"
+          width="85%"
+          color={"rgba(240, 80, 39, 1)"}
+          sx={{
+            opacity: 0.5,
+            backdropFilter: "blur(4px)",
+            backgroundImage:
+              "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+            border: "2px solid rgba(240, 80, 39, .3)",
+          }}
+        >
+          <ModalHeader>Frame Details</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Grid
@@ -59,22 +71,40 @@ const FrameModal: React.FC<FrameModalProps> = ({ isOpen, onClose }) => {
                 />
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <Heading size="md">Frame Title</Heading>
+                <HStack>
+                  <Heading size="md">Frame Title : </Heading>
+                  <Text color={"#01011f"}>Fuck you canada</Text>
+                </HStack>
               </GridItem>
               <GridItem rowSpan={1} colSpan={2}>
-                <Heading size="md">Frame Description</Heading>
+                <HStack>
+                  <Heading size="md">Frame Description</Heading>
+                  <Text color={"#01011f"}>Fuck you canada</Text>
+                </HStack>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <Heading size="md">Total views</Heading>
+                <HStack>
+                  <Heading size="md">Total views</Heading>
+                  <Text color={"#01011f"}>Fuck you canada</Text>
+                </HStack>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <Heading size="md">Total Leads</Heading>
+                <HStack>
+                  <Heading size="md">Total Leads</Heading>
+                  <Text color={"#01011f"}>Fuck you canada</Text>
+                </HStack>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
-                <Heading size="md">Total Clicks</Heading>
+                <HStack>
+                  <Heading size="md">Total Clicks</Heading>
+                  <Text color={"#01011f"}>Fuck you canada</Text>
+                </HStack>
               </GridItem>
               <GridItem rowSpan={1} colSpan={3}>
-                <Heading size="md">Total Earnings</Heading>
+                <HStack>
+                  <Heading size="md">Total Earnings</Heading>
+                  <Text color={"#01011f"}>Fuck you canada</Text>
+                </HStack>
               </GridItem>
             </Grid>
           </ModalBody>

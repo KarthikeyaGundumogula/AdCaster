@@ -60,7 +60,7 @@ const Dashboard: React.FC = () => {
           <Button
             isLoading={false}
             loadingText={"Creating Frame"}
-            colorScheme="teal"
+            colorScheme="orange"
             variant={"outline"}
             onClick={handleCreateFrame}
           >

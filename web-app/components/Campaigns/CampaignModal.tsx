@@ -45,7 +45,18 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
     <>
       <Modal isOpen={isOpen} onClose={onClose} size="75%" isCentered={true}>
         <ModalOverlay />
-        <ModalContent height="500px" width="85%">
+        <ModalContent
+          height="500px"
+          width="85%"
+          color={"rgba(240, 80, 39, 1)"}
+          sx={{
+            opacity: 0.5,
+            backdropFilter: "blur(4px)",
+            backgroundImage:
+              "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+            border: "2px solid rgba(240, 80, 39, .3)",
+          }}
+        >
           <ModalHeader>Frame Options</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

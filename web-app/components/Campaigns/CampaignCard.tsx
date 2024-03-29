@@ -29,12 +29,16 @@ const AdCard: React.FC<AppCardProps> = ({ title, status, AdId }) => {
         borderRadius="12"
         width="250px"
         height="100px"
-        bg={"AppWorkspace"}
         _hover={{
-          cursor: "pointer",
-          boxShadow: "2xl",
-          width: "270px",
-          height: "120px",
+          transform: "scale(1.1)",
+          transition: "transform 0.3s",
+        }}
+        sx={{
+          opacity: 0.8,
+          backdropFilter: "blur(2px)",
+          backgroundImage:
+            "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+          border: "1px solid rgba(240, 80, 39, .3)",
         }}
         onClick={handleFrameClick}
       >
