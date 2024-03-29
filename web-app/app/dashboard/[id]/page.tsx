@@ -83,7 +83,12 @@ const Dashboard: React.FC = () => {
       <Box alignItems="center" padding={2} paddingLeft={8}>
         <Grid templateColumns="repeat(4, 2fr)" gap={4}>
           {frames.map((frame: { FrameId: string }) => (
-            <FrameCard frameId={frame.FrameId} status="active" title="test" />
+            <FrameCard
+              frameId={frame.FrameId}
+              status="active"
+              title="test"
+              key={frame.FrameId}
+            />
           ))}
         </Grid>
       </Box>
@@ -95,7 +100,7 @@ const Dashboard: React.FC = () => {
       <Box alignItems="center" padding={2} paddingLeft={8}>
         <Grid templateColumns="repeat(4, 2fr)" gap={4}>
           {ads.map((ad: { AdId: string }) => (
-            <AdCard AdId={ad.AdId} status="active" title="test" />
+            <AdCard AdId={ad.AdId} status="active" title="test" key={ad.AdId} />
           ))}
         </Grid>
       </Box>

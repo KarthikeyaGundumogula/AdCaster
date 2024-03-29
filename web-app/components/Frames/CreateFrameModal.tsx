@@ -53,13 +53,19 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
             <Input
               type="file"
               placeholder="Input 3"
+              value={input3 ? input3.name : ""}
               onChange={handleInputChange3}
             />
             <Box>"Your Frame URL"</Box>
           </VStack>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="orange" variant={"outline"} mr={3} onClick={handleSubmit}>
+          <Button
+            colorScheme="orange"
+            variant={"outline"}
+            mr={3}
+            onClick={handleSubmit}
+          >
             Create
           </Button>
           <Button onClick={onClose}>Cancel</Button>
