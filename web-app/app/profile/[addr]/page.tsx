@@ -19,9 +19,7 @@ const EarningsComponent = () => {
               padding={10}
               borderRadius={12}
               _hover={{
-                height: 220,
-                width: "calc(100% + 10px)",
-                transform: "translateY(-10px)",
+                transform: "scale(1.05)",
               }}
               sx={{
                 opacity: 0.8,
@@ -48,9 +46,7 @@ const EarningsComponent = () => {
               padding={10}
               borderRadius={12}
               _hover={{
-                height: 220,
-                width: "calc(100% + 10px)",
-                transform: "translateY(-10px)",
+                transform: "scale(1.05)",
               }}
               sx={{
                 opacity: 0.8,
@@ -77,9 +73,7 @@ const EarningsComponent = () => {
               padding={10}
               borderRadius={12}
               _hover={{
-                height: 220,
-                width: "calc(100% + 10px)",
-                transform: "translateY(-10px)",
+                transform: "scale(1.05)",
               }}
               sx={{
                 opacity: 0.8,
@@ -106,9 +100,7 @@ const EarningsComponent = () => {
               padding={10}
               borderRadius={12}
               _hover={{
-                height: 220,
-                width: "calc(100% + 10px)",
-                transform: "translateY(-10px)",
+                transform: "scale(1.05)",
               }}
               sx={{
                 opacity: 0.8,
@@ -135,9 +127,7 @@ const EarningsComponent = () => {
               padding={10}
               borderRadius={12}
               _hover={{
-                height: 220,
-                width: "calc(100% + 10px)",
-                transform: "translateY(-10px)",
+                transform: "scale(1.05)",
               }}
               sx={{
                 opacity: 0.8,
@@ -164,9 +154,7 @@ const EarningsComponent = () => {
               padding={10}
               borderRadius={12}
               _hover={{
-                height: 220,
-                width: "calc(100% + 10px)",
-                transform: "translateY(-10px)",
+                transform: "scale(1.05)",
               }}
               sx={{
                 opacity: 0.8,
