@@ -3,9 +3,15 @@ import { frames } from "./frames";
 import { Button } from "frames.js/next";
 
 const handler = frames(async (ctx) => {
-  console.log(ctx.url.pathname);
+  const path = ctx.url.pathname;
+  const cid = path.split("/")[2];
+  const imageURL = `https://harlequin-reduced-macaw-748.mypinata.cloud/ipfs/${cid}`;
+  function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   return {
-    image: <div tw="flex">Welcome</div>,
+    image: imageURL,
     buttons: [
       // With query params
       // Without query params
