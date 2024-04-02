@@ -19,7 +19,6 @@ import {
 } from "@chakra-ui/react";
 import Header from "@/components/Header";
 import React, { useState } from "react";
-import { title } from "process";
 
 const EarningsComponent = () => {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
@@ -103,7 +102,8 @@ const EarningsComponent = () => {
                 padding={10}
                 borderRadius={12}
                 _hover={{
-                  transform: "scale(1.05)",
+                  transform: "scale(1.1)",
+                  transition: "0.5s",
                 }}
                 sx={{
                   opacity: 0.8,

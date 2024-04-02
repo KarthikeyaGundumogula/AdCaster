@@ -46,11 +46,11 @@ const FrameModal: React.FC<FrameModalProps> = ({ isOpen, onClose }) => {
           width="85%"
           color={"rgba(240, 80, 39, 1)"}
           sx={{
-            opacity: 0.5,
-            backdropFilter: "blur(4px)",
+            opacity: 0.8,
+            backdropFilter: "blur(2px)",
             backgroundImage:
-              "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 90, 246, .03) 50%, rgba(50, 224, 255, .1))",
-            border: "2px solid rgba(240, 80, 39, .3)",
+              "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+            border: "1px solid rgba(240, 80, 39, .3)",
           }}
         >
           <ModalHeader>Frame Details</ModalHeader>

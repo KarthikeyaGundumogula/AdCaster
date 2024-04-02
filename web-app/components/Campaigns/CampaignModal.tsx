@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -22,6 +22,7 @@ import {
   Td,
   Input,
 } from "@chakra-ui/react";
+import { getGraphData } from "@/utils/GetData";
 
 interface CampaignModalProps {
   isOpen: boolean;
@@ -40,6 +41,95 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
   )}/200/300`;
   const [isCreatorModalOpen, setCreatorModalOpen] = React.useState(false);
   const [isAddAmountOpen, setAddAmountOpen] = React.useState(false);
+
+  const [ads, setAds] = useState([
+    {
+      title: "Campaign Title",
+      value: "",
+    },
+    {
+      title: "Campaign Status",
+      value: "",
+    },
+    {
+      title: "Campaign Budget",
+      value: "",
+    },
+    {
+      title: "Current Funds",
+      value: "",
+    },
+    {
+      title: "Total Views",
+      value: "",
+    },
+    {
+      title: "Total Leads",
+      value: "",
+    },
+    {
+      title: "Total Clicks",
+      value: "",
+    },
+  ]);
+
+  useEffect(() => {
+    async function getUser() {
+      const query = `  
+      {
+        ads( where: {AdId: "2"}) {
+          TotalFunds
+          AdData
+          AdStatus
+          TotalClicks
+          TotalViews
+          CurrentFunds
+        }
+      }
+      `;
+      const data = await getGraphData(query);
+      if (data != undefined) {
+        let a = [
+          {
+            title: "Campaign Title",
+            value: "",
+          },
+          {
+            title: "Campaign Status",
+            value: data.data.data.ads[0].AdStatus ? "Online" : "Offline",
+          },
+          {
+            title: "Campaign Budget",
+            value: data.data.data.ads[0].TotalFunds,
+          },
+          {
+            title: "Current Funds",
+            value: data.data.data.ads[0].CurrentFunds,
+          },
+          {
+            title: "Total Views",
+            value: data.data.data.ads[0].TotalViews,
+          },
+          {
+            title: "Total Leads",
+            value: data.data.data.ads[0].TotalViews,
+          },
+          {
+            title: "Total Clicks",
+            value: data.data.data.ads[0].TotalClicks,
+          },
+        ];
+        const res = await fetch(
+          "https://harlequin-reduced-macaw-748.mypinata.cloud/ipfs/QmayrtD5WD8CXDpYn9apvr8bRf2aCwKCZoTFtdDS1SPdkq"
+        );
+        const title = await res.json();
+        console.log(title);
+        a[0].value = title.title;
+        setAds(a);
+      }
+    }
+    getUser();
+  }, []);
 
   const handleAddCreatorModal = () => {
     setCreatorModalOpen(true);
@@ -79,7 +169,9 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
             border: "2px solid rgba(240, 80, 39, .3)",
           }}
         >
-          <ModalHeader>Campaign Details</ModalHeader>
+          <ModalHeader textDecoration={"underline"} fontStyle={"oblique"}>
+            Campaign Details
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Grid
@@ -94,29 +186,19 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
                   width={500}
                   height={300}
                   objectFit="cover"
+                  borderRadius={12}
                 />
               </GridItem>
-              <GridItem rowSpan={1} colSpan={1}>
-                <Heading size="md">Frame Title</Heading>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1}>
-                <Heading size="md">Frame Status</Heading>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1}>
-                <Heading size="md">Frame Budget</Heading>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1}>
-                <Heading size="md">Total Spent</Heading>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1}>
-                <Heading size="md">Total views</Heading>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1}>
-                <Heading size="md">Total Leads</Heading>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={3}>
-                <Heading size="md">Total Clicks</Heading>
-              </GridItem>
+              {ads.map((ad) => (
+                <GridItem rowSpan={1} colSpan={1}>
+                  <HStack>
+                    <Heading size="md">{ad.title}:</Heading>
+                    <Heading size="md" color={"brown"}>
+                      {ad.value}
+                    </Heading>
+                  </HStack>
+                </GridItem>
+              ))}
             </Grid>
             <Center>
               <HStack>
@@ -133,6 +215,11 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
                   onClick={handleAddCreatorModal}
                 >
                   Add Creator
+                </Button>
+                <Button colorScheme="red" variant={"outline"}>
+                  {ads[1].value === "Online"
+                    ? "Stop Campaign"
+                    : "Start Campaign"}
                 </Button>
               </HStack>
             </Center>

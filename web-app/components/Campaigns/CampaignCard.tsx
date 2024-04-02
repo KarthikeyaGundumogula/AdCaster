@@ -1,18 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Image, Heading, Grid, GridItem } from "@chakra-ui/react";
 import CampaignModal from "./CampaignModal";
 
 interface AppCardProps {
-  title: string;
+  data: string;
   status: string;
   AdId: string;
 }
 
-const AdCard: React.FC<AppCardProps> = ({ title, status, AdId }) => {
+const AdCard: React.FC<AppCardProps> = ({ data, status, AdId }) => {
   const logo = `https://picsum.photos/seed/${encodeURIComponent(AdId)}/200/300`;
-
   const [isOpen, setIsOpen] = useState(false);
+  const [title, setTitle] = useState("");
 
   const handleFrameClick = () => {
     setIsOpen(true);
@@ -21,6 +21,17 @@ const AdCard: React.FC<AppCardProps> = ({ title, status, AdId }) => {
   const handleCloseModal = () => {
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch(
+        "https://harlequin-reduced-macaw-748.mypinata.cloud/ipfs/QmayrtD5WD8CXDpYn9apvr8bRf2aCwKCZoTFtdDS1SPdkq"
+      );
+      const data = await response.json();
+      setTitle(data.title);
+    }
+    fetchData();
+  }, [AdId]);
 
   return (
     <>

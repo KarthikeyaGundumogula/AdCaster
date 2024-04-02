@@ -99,8 +99,13 @@ const Dashboard: React.FC = () => {
       </Box>
       <Box alignItems="center" padding={2} paddingLeft={8}>
         <Grid templateColumns="repeat(4, 2fr)" gap={4}>
-          {ads.map((ad: { AdId: string }) => (
-            <AdCard AdId={ad.AdId} status="active" title="test" key={ad.AdId} />
+          {ads.map((ad: { AdId: string; AdData: string }) => (
+            <AdCard
+              AdId={ad.AdId}
+              status="active"
+              data={ad.AdData}
+              key={ad.AdId}
+            />
           ))}
         </Grid>
       </Box>

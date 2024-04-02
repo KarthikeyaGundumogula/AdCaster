@@ -19,7 +19,6 @@ const Header = () => {
   const path = useParams();
   useEffect(() => {
     try {
-      console.log(path);
       const acc = new BrowserProvider((window as any).ethereum);
       const getUser = async () => {
         const user = await acc.getSigner();
