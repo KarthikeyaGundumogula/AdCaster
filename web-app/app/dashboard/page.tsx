@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { BrowserProvider } from "ethers";
 
 import React from "react";
+import Profile from "../profile/page";
 
-const dashboard = () => {
+const Dashboard = () => {
   const router = useRouter();
 
   const handleConnect = () => {
@@ -34,4 +35,4 @@ const dashboard = () => {
   );
 };
 
-export default dashboard;
+export default Dashboard;

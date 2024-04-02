@@ -6,7 +6,7 @@ import { BrowserProvider } from "ethers";
 
 import React from "react";
 
-const dashboard = () => {
+const Profile = () => {
   const router = useRouter();
 
   const handleConnect = () => {
@@ -34,4 +34,4 @@ const dashboard = () => {
   );
 };
 
-export default dashboard;
+export default Profile;
