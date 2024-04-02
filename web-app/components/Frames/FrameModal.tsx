@@ -49,7 +49,7 @@ const FrameModal: React.FC<FrameModalProps> = ({ isOpen, onClose }) => {
             opacity: 0.5,
             backdropFilter: "blur(4px)",
             backgroundImage:
-              "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+              "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 90, 246, .03) 50%, rgba(50, 224, 255, .1))",
             border: "2px solid rgba(240, 80, 39, .3)",
           }}
         >
@@ -73,37 +73,37 @@ const FrameModal: React.FC<FrameModalProps> = ({ isOpen, onClose }) => {
               <GridItem rowSpan={1} colSpan={1}>
                 <HStack>
                   <Heading size="md">Frame Title : </Heading>
-                  <Text color={"#01011f"}>Fuck you canada</Text>
+                  <Text color={"#01011f"}>you canada</Text>
                 </HStack>
               </GridItem>
               <GridItem rowSpan={1} colSpan={2}>
                 <HStack>
                   <Heading size="md">Frame Description</Heading>
-                  <Text color={"#01011f"}>Fuck you canada</Text>
+                  <Text color={"#01011f"}>you canada</Text>
                 </HStack>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
                 <HStack>
                   <Heading size="md">Total views</Heading>
-                  <Text color={"#01011f"}>Fuck you canada</Text>
+                  <Text color={"#01011f"}>you canada</Text>
                 </HStack>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
                 <HStack>
                   <Heading size="md">Total Leads</Heading>
-                  <Text color={"#01011f"}>Fuck you canada</Text>
+                  <Text color={"#01011f"}>you canada</Text>
                 </HStack>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
                 <HStack>
                   <Heading size="md">Total Clicks</Heading>
-                  <Text color={"#01011f"}>Fuck you canada</Text>
+                  <Text color={"#01011f"}>you canada</Text>
                 </HStack>
               </GridItem>
               <GridItem rowSpan={1} colSpan={3}>
                 <HStack>
                   <Heading size="md">Total Earnings</Heading>
-                  <Text color={"#01011f"}>Fuck you canada</Text>
+                  <Text color={"#01011f"}>you canada</Text>
                 </HStack>
               </GridItem>
             </Grid>

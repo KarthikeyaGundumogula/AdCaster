@@ -10,6 +10,7 @@ import {
   ModalCloseButton,
   Input,
   VStack,
+  FormControl,
 } from "@chakra-ui/react";
 import { pinFileToIPFS } from "@/utils/saveFileToIPFS";
 import { saveMetaDataToIPFS } from "@/utils/saveMetaDataToIPFS";
@@ -22,35 +23,28 @@ interface CreateAdModalProps {
 }
 
 const CreateAdModal: React.FC<CreateAdModalProps> = ({ isOpen, onClose }) => {
-  const [input1, setInput1] = useState("");
-  const [input2, setInput2] = useState("");
-  const [input3, setInput3] = useState<File | null>(null);
-  const [input4, setInput4] = useState("");
+  const [formState, setFormState] = useState({
+    adTitle: "",
+    adPickUpLine: "",
+    totalBudget: "",
+    image: null,
+  });
 
-  const handleInputChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput1(e.target.value);
-  };
-
-  const handleInputChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput2(e.target.value);
-  };
-  const handleInputChange3 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setInput3(e.target.files[0]);
-    }
-  };
-  const handleInputChange4 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput4(e.target.value);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = async () => {
-    console.log(input3);
-    if (input3) {
-      const ipfsHash = await pinFileToIPFS(input3);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (formState.image) {
+      const ipfsHash = await pinFileToIPFS(formState.image);
       console.log(ipfsHash);
       const obj = {
-        title: input1,
-        pickUpLine: input2,
+        title: formState.adTitle,
+        pickUpLine: formState.adPickUpLine,
         image: ipfsHash,
       };
       const metaDataHash = await saveMetaDataToIPFS(obj);
@@ -58,49 +52,70 @@ const CreateAdModal: React.FC<CreateAdModalProps> = ({ isOpen, onClose }) => {
       const provider = new BrowserProvider((window as any).ethereum);
       const signer = await provider.getSigner();
       const server = new Contract(Address, ABI, signer);
-      const tx = await server.createAd(metaDataHash, input4);
+      const tx = await server.createAd(metaDataHash, formState.totalBudget);
       await tx.wait();
       onClose();
     }
-    console.log("fuck");
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent
+        color={"rgba(240, 80, 39, 1)"}
+        sx={{
+          opacity: 0.5,
+          backdropFilter: "blur(4px)",
+          backgroundImage:
+            "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 90, 246, .03) 50%, rgba(50, 224, 255, .1))",
+          border: "2px solid rgba(240, 80, 39, .3)",
+        }}
+      >
         <ModalHeader>Create Ad</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <VStack spacing={2}>
-            <Input
-              placeholder="Ad Title"
-              value={input1}
-              onChange={handleInputChange1}
-            />
-            <Input
-              placeholder="Ad Pick-up line"
-              value={input2}
-              onChange={handleInputChange2}
-            />
-            <Input
-              placeholder="Total Budgget in ADCAST"
-              value={input4}
-              onChange={handleInputChange4}
-            />
-            <Input
-              placeholder="Image "
-              type="file"
-              onChange={handleInputChange3}
-            />
-          </VStack>
+          <form onSubmit={handleSubmit}>
+            <VStack spacing={2}>
+              <FormControl isRequired>
+                <Input
+                  name="adTitle"
+                  placeholder="Ad Title"
+                  value={formState.adTitle}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+              <FormControl isRequired>
+                <Input
+                  name="adPickUpLine"
+                  placeholder="Ad Pick-up line"
+                  value={formState.adPickUpLine}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+              <FormControl isRequired>
+                <Input
+                  name="totalBudget"
+                  placeholder="Total Budget in ADCAST"
+                  type="number"
+                  value={formState.totalBudget}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+              <FormControl isRequired>
+                <Input name="image" type="file" onChange={handleInputChange} />
+              </FormControl>
+            </VStack>
+            <ModalFooter>
+              <Button colorScheme="orange" variant="outline" type="submit">
+                Submit
+              </Button>
+              <Button onClick={onClose} colorScheme="red">
+                {" "}
+                Close
+              </Button>
+            </ModalFooter>
+          </form>
         </ModalBody>
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
-            Create
-          </Button>
-          <Button onClick={onClose}>Cancel</Button>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   );

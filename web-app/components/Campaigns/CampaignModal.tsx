@@ -14,6 +14,13 @@ import {
   GridItem,
   HStack,
   Center,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Input,
 } from "@chakra-ui/react";
 
 interface CampaignModalProps {
@@ -32,6 +39,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
     title
   )}/200/300`;
   const [isCreatorModalOpen, setCreatorModalOpen] = React.useState(false);
+  const [isAddAmountOpen, setAddAmountOpen] = React.useState(false);
 
   const handleAddCreatorModal = () => {
     setCreatorModalOpen(true);
@@ -40,6 +48,20 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
   const handleCreatorModalClose = () => {
     setCreatorModalOpen(false);
   };
+
+  const handleAddAmountModalClose = () => {
+    setAddAmountOpen(false);
+  };
+
+  const handleAddAmountModalOpen = () => {
+    setAddAmountOpen(true);
+  };
+
+  const creators = [
+    { id: 1, field2: "Creator 1", field3: "10", field4: "5" },
+    { id: 2, field2: "Creator 2", field3: "20", field4: "10" },
+    { id: 3, field2: "Creator 3", field3: "15", field4: "8" },
+  ];
 
   return (
     <>
@@ -57,7 +79,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
             border: "2px solid rgba(240, 80, 39, .3)",
           }}
         >
-          <ModalHeader>Frame Options</ModalHeader>
+          <ModalHeader>Campaign Details</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Grid
@@ -98,56 +120,119 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
             </Grid>
             <Center>
               <HStack>
-                <Button colorScheme="blue">Add Funds</Button>
-                <Button colorScheme="green" onClick={handleAddCreatorModal}>
+                <Button
+                  colorScheme="orange"
+                  variant={"outline"}
+                  onClick={handleAddAmountModalOpen}
+                >
+                  Add Funds
+                </Button>
+                <Button
+                  colorScheme="green"
+                  variant={"outline"}
+                  onClick={handleAddCreatorModal}
+                >
                   Add Creator
                 </Button>
               </HStack>
             </Center>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
-              Save
-            </Button>
             <Button onClick={onClose}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <Modal isOpen={isAddAmountOpen} onClose={handleAddAmountModalClose}>
+        <ModalOverlay />
+        <ModalContent
+          color={"rgba(240, 80, 39, 1)"}
+          sx={{
+            opacity: 0.5,
+            backdropFilter: "blur(4px)",
+            backgroundImage:
+              "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+            border: "2px solid rgba(240, 80, 39, .3)",
+          }}
+        >
+          <ModalHeader>Add Funds</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Input placeholder="Amount" type="Number" />
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="green" variant={"outline"}>
+              Add
+            </Button>
+            <Button onClick={handleAddAmountModalClose}>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       <Modal
         isOpen={isCreatorModalOpen}
         onClose={handleCreatorModalClose}
-        size="75%"
+        size="3xl"
         isCentered={true}
       >
         <ModalOverlay />
-        <ModalContent height="500px" width="85%">
+        <ModalContent
+          color={"rgba(240, 80, 39, 1)"}
+          sx={{
+            opacity: 0.5,
+            backdropFilter: "blur(4px)",
+            backgroundImage:
+              "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+            border: "2px solid rgba(240, 80, 39, .3)",
+          }}
+        >
           <ModalHeader textDecoration={"underline"} fontStyle={"oblique"}>
             Creators
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Grid templateColumns="repeat(5, 1fr)" gap={2}>
-              <GridItem colSpan={1}>
-                <Heading size="md">Name</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="md">Followers</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="md">Ad Cost</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="md">Platforms: {""}</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Button colorScheme="green">Add Creator</Button>
-              </GridItem>
-            </Grid>
+            <Table variant="simple">
+              <Thead>
+                <Tr>
+                  <Th textAlign={"center"} fontWeight={"bold"}>
+                    Creator ID
+                  </Th>
+                  <Th textAlign={"center"} fontWeight={"bold"}>
+                    Followers
+                  </Th>
+                  <Th textAlign={"center"} fontWeight={"bold"}>
+                    Lead Cost
+                  </Th>
+                  <Th textAlign={"center"} fontWeight={"bold"}>
+                    Click Reward
+                  </Th>
+                  <Th></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {/* Replace this with your actual data */}
+                {creators.map((creator) => (
+                  <Tr key={creator.id}>
+                    <Td textAlign={"center"}>{creator.id}</Td>
+                    <Td textAlign={"center"}>{creator.field2}</Td>
+                    <Td textAlign={"center"}>{creator.field3}</Td>
+                    <Td textAlign={"center"}>{creator.field4}</Td>
+                    <Td>
+                      <Button
+                        isLoading={false}
+                        loadingText="Adding"
+                        colorScheme="green"
+                        variant="outline"
+                      >
+                        Add Creator
+                      </Button>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
-              Save
-            </Button>
             <Button onClick={handleCreatorModalClose}>Close</Button>
           </ModalFooter>
         </ModalContent>
