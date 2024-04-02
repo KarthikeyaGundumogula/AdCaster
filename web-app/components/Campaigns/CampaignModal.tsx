@@ -190,7 +190,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
                 />
               </GridItem>
               {ads.map((ad) => (
-                <GridItem rowSpan={1} colSpan={1}>
+                <GridItem rowSpan={1} colSpan={1} key={ad.title}>
                   <HStack>
                     <Heading size="md">{ad.title}:</Heading>
                     <Heading size="md" color={"brown"}>
