@@ -8,6 +8,7 @@ import CreateAdModal from "@/components/Campaigns/CreateAdModal";
 import CreateFrameModal from "@/components/Frames/CreateFrameModal";
 import { useParams } from "next/navigation";
 import { getGraphData } from "@/utils/GetData";
+import Loading from "@/components/Props/Loading";
 
 const Dashboard: React.FC = () => {
   const [createAdModal, setCreateAdModal] = useState(false);
@@ -16,9 +17,11 @@ const Dashboard: React.FC = () => {
   const [ads, setAds] = useState([]);
   const [user, setUser] = useState("");
   const path = useParams();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function getUser() {
+      setLoading(true);
       setUser(path.id.toString());
       const query = `  
       {
@@ -36,11 +39,10 @@ const Dashboard: React.FC = () => {
       `;
       const data = await getGraphData(query);
       if (data != undefined) {
-        console.log();
         setFrames(data.data.data.frames);
         setAds(data.data.data.ads);
+        setLoading(false);
       }
-      console.log(ads);
     }
     getUser();
   }, [user]);
@@ -55,68 +57,74 @@ const Dashboard: React.FC = () => {
   return (
     <div>
       <Header />
-      <Center paddingTop={2}>
-        <HStack>
-          <Button
-            isLoading={false}
-            loadingText={"Creating Frame"}
-            colorScheme="orange"
-            variant={"outline"}
-            onClick={handleCreateFrame}
-          >
-            Create Frame
-          </Button>
-          <Button
-            colorScheme="orange"
-            variant={"outline"}
-            onClick={handleCreateAd}
-          >
-            Create Campaign
-          </Button>
-        </HStack>
-      </Center>
-      <Box padding={2} paddingLeft={8}>
-        <Heading size="lg" textDecoration="underline">
-          Casted Frames
-        </Heading>
-      </Box>
-      <Box alignItems="center" padding={2} paddingLeft={8}>
-        <Grid templateColumns="repeat(4, 2fr)" gap={4}>
-          {frames.map((frame: { FrameId: string }) => (
-            <FrameCard
-              frameId={frame.FrameId}
-              status="active"
-              title="test"
-              key={frame.FrameId}
-            />
-          ))}
-        </Grid>
-      </Box>
-      <Box padding={2} paddingLeft={8}>
-        <Heading size="lg" textDecoration="underline">
-          Launched Campaigns
-        </Heading>
-      </Box>
-      <Box alignItems="center" padding={2} paddingLeft={8}>
-        <Grid templateColumns="repeat(4, 2fr)" gap={4}>
-          {ads.map((ad: { AdId: string; AdData: string }) => (
-            <AdCard
-              AdId={ad.AdId}
-              status="active"
-              data={ad.AdData}
-              key={ad.AdId}
-            />
-          ))}
-        </Grid>
-      </Box>
-      <CreateAdModal
-        isOpen={createAdModal}
-        onClose={() => setCreateAdModal(false)}
-      />
-      <CreateFrameModal
-        isOpen={createFrameModal}
-        onClose={() => setCreateFrameModal(false)}
-      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <Center paddingTop={2}>
+            <HStack>
+              <Button
+                isLoading={false}
+                loadingText={"Creating Frame"}
+                colorScheme="orange"
+                variant={"outline"}
+                onClick={handleCreateFrame}
+              >
+                Create Frame
+              </Button>
+              <Button
+                colorScheme="orange"
+                variant={"outline"}
+                onClick={handleCreateAd}
+              >
+                Create Campaign
+              </Button>
+            </HStack>
+          </Center>
+          <Box padding={2} paddingLeft={8}>
+            <Heading size="lg" textDecoration="underline">
+              Casted Frames
+            </Heading>
+          </Box>
+          <Box alignItems="center" padding={2} paddingLeft={8}>
+            <Grid templateColumns="repeat(4, 2fr)" gap={4}>
+              {frames.map((frame: { FrameId: string }) => (
+                <FrameCard
+                  frameId={frame.FrameId}
+                  status="active"
+                  title="test"
+                  key={frame.FrameId}
+                />
+              ))}
+            </Grid>
+          </Box>
+          <Box padding={2} paddingLeft={8}>
+            <Heading size="lg" textDecoration="underline">
+              Launched Campaigns
+            </Heading>
+          </Box>
+          <Box alignItems="center" padding={2} paddingLeft={8}>
+            <Grid templateColumns="repeat(4, 2fr)" gap={4}>
+              {ads.map((ad: { AdId: string; AdData: string }) => (
+                <AdCard
+                  AdId={ad.AdId}
+                  status="active"
+                  data={ad.AdData}
+                  key={ad.AdId}
+                />
+              ))}
+            </Grid>
+          </Box>
+          <CreateAdModal
+            isOpen={createAdModal}
+            onClose={() => setCreateAdModal(false)}
+          />
+          <CreateFrameModal
+            isOpen={createFrameModal}
+            onClose={() => setCreateFrameModal(false)}
+          />
+        </>
+      )}
     </div>
   );
 };

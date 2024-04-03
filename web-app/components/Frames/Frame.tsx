@@ -77,7 +77,11 @@ const FrameCard: React.FC<AppCardProps> = ({ title, status, frameId }) => {
           </Grid>{" "}
         </Box>
       </Box>
-      <FrameModal isOpen={isOpen} onClose={handleCloseModal} />
+      <FrameModal
+        isOpen={isOpen}
+        onClose={handleCloseModal}
+        frameId={frameId}
+      />
     </>
   );
 };

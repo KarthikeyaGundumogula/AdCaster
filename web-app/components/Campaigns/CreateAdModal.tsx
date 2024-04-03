@@ -106,11 +106,16 @@ const CreateAdModal: React.FC<CreateAdModalProps> = ({ isOpen, onClose }) => {
               </FormControl>
             </VStack>
             <ModalFooter>
-              <Button colorScheme="orange" variant="outline" type="submit">
+              <Button
+                colorScheme="orange"
+                variant="outline"
+                type="submit"
+                isLoading={false}
+                loadingText="Creating"
+              >
                 Submit
-              </Button>
+              </Button>{" "}
               <Button onClick={onClose} colorScheme="red">
-                {" "}
                 Close
               </Button>
             </ModalFooter>

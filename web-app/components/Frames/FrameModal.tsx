@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -13,30 +13,87 @@ import {
   Grid,
   GridItem,
   HStack,
-  Center,
+  useClipboard,
   Text,
 } from "@chakra-ui/react";
+import { getGraphData } from "@/utils/GetData";
 
 interface FrameModalProps {
   isOpen: boolean;
   onClose: () => void;
+  frameId: string;
 }
 
-const FrameModal: React.FC<FrameModalProps> = ({ isOpen, onClose }) => {
+const FrameModal: React.FC<FrameModalProps> = ({
+  isOpen,
+  onClose,
+  frameId,
+}) => {
   let title = "Frame";
   const logo = `https://picsum.photos/seed/${encodeURIComponent(
     title
   )}/200/300`;
-  const [isCreatorModalOpen, setCreatorModalOpen] = React.useState(false);
 
-  const handleAddCreatorModal = () => {
-    setCreatorModalOpen(true);
-  };
+  const [frameTitle, setFrameTitle] = useState("");
+  const [frameDescription, setFrameDescription] = useState("");
+  const [totalViews, setTotalViews] = useState("");
+  const [totalClicks, setTotalClicks] = useState("");
+  const [totalEarnings, setTotalEarnings] = useState("");
+  const [adId, setAdId] = useState("");
+  const [cast, setCast] = useState(logo);
+  const [ad, setAd] = useState({
+    Advertiser: "",
+    Title: "",
+    PickUpLine: "",
+    Image: "",
+  });
+  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
 
-  const handleCreatorModalClose = () => {
-    setCreatorModalOpen(false);
-  };
-
+  const { hasCopied: hasUrlCopied, onCopy: onUrlCopy } = useClipboard(cast);
+  useEffect(() => {
+    async function getUser() {
+      const query = `  
+      {
+        frames(where: {FrameId: "${frameId}"}) {
+          AdId
+          TotalClicks
+          TotalViews
+        }
+      }
+      `;
+      const data = await getGraphData(query);
+      if (data != undefined) {
+        setAdId(data.data.data.frames[0].AdId);
+        setTotalClicks(data.data.data.frames[0].TotalClicks);
+        setTotalViews(data.data.data.frames[0].TotalViews);
+        const query = `  
+        {
+          ads(where: {AdId: "2"}) {
+            Advertiser
+            AdData
+          }
+        }
+        `;
+        const res = await getGraphData(query);
+        if (res) {
+          const da = await fetch(
+            `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${res.data.data.ads[0].AdData}`
+          );
+          const a = await da.json();
+          const obj = {
+            Title: a.title,
+            PickUpLine: a.pickUpLine,
+            Image: a.image,
+            Advertiser: res.data.data.ads[0].Advertiser,
+          };
+          setAd(obj);
+        } else {
+          console.error("Data structure is not as expected");
+        }
+      }
+    }
+    getUser();
+  }, [frameId]);
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} size="75%" isCentered={true}>
@@ -49,7 +106,7 @@ const FrameModal: React.FC<FrameModalProps> = ({ isOpen, onClose }) => {
             opacity: 0.8,
             backdropFilter: "blur(2px)",
             backgroundImage:
-              "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+              "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 70%, rgba(0, 224, 255, .1))",
             border: "1px solid rgba(240, 80, 39, .3)",
           }}
         >
@@ -70,40 +127,56 @@ const FrameModal: React.FC<FrameModalProps> = ({ isOpen, onClose }) => {
                   objectFit="cover"
                 />
               </GridItem>
+              {[
+                { title: "Frame Title", value: frameTitle },
+                {
+                  title: "Frame Description",
+                  value: frameDescription,
+                },
+                { title: "Total Views", value: totalViews },
+                { title: "Total Leads", value: totalViews },
+                {
+                  title: "Total Clicks",
+                  value: totalClicks,
+                },
+                {
+                  title: "Total Earnings",
+                  value: totalEarnings,
+                },
+              ].map((item, index) => (
+                <GridItem key={index} rowSpan={1} colSpan={index === 1 ? 2 : 1}>
+                  <HStack>
+                    <Heading size="md">{item.title}:</Heading>
+                    <Text color="#01011f">{item.value}</Text>
+                  </HStack>
+                </GridItem>
+              ))}
               <GridItem rowSpan={1} colSpan={1}>
                 <HStack>
-                  <Heading size="md">Frame Title : </Heading>
-                  <Text color={"#01011f"}>you canada</Text>
-                </HStack>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={2}>
-                <HStack>
-                  <Heading size="md">Frame Description</Heading>
-                  <Text color={"#01011f"}>you canada</Text>
-                </HStack>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1}>
-                <HStack>
-                  <Heading size="md">Total views</Heading>
-                  <Text color={"#01011f"}>you canada</Text>
+                  <Heading size="md" paddingLeft={3}>
+                    AD:
+                  </Heading>
+                  <Button
+                    colorScheme="orange"
+                    variant={"outline"}
+                    onClick={() => setIsAdModalOpen(true)}
+                  >
+                    {adId}
+                  </Button>
                 </HStack>
               </GridItem>
               <GridItem rowSpan={1} colSpan={1}>
                 <HStack>
-                  <Heading size="md">Total Leads</Heading>
-                  <Text color={"#01011f"}>you canada</Text>
-                </HStack>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={1}>
-                <HStack>
-                  <Heading size="md">Total Clicks</Heading>
-                  <Text color={"#01011f"}>you canada</Text>
-                </HStack>
-              </GridItem>
-              <GridItem rowSpan={1} colSpan={3}>
-                <HStack>
-                  <Heading size="md">Total Earnings</Heading>
-                  <Text color={"#01011f"}>you canada</Text>
+                  <Heading size="md">CAST:</Heading>
+                  <Text
+                    color={"#01011f"}
+                    onClick={onUrlCopy}
+                    cursor="pointer"
+                    fontStyle={"italic"}
+                  >
+                    {cast.length > 13 ? `${cast.substring(0, 25)}..` : cast}
+                  </Text>
+                  {hasUrlCopied && <Text color={"black"}>Copied!</Text>}
                 </HStack>
               </GridItem>
             </Grid>
@@ -116,42 +189,61 @@ const FrameModal: React.FC<FrameModalProps> = ({ isOpen, onClose }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <Modal
-        isOpen={isCreatorModalOpen}
-        onClose={handleCreatorModalClose}
-        size="75%"
-        isCentered={true}
-      >
+      <Modal isOpen={isAdModalOpen} onClose={() => setIsAdModalOpen(false)}>
         <ModalOverlay />
-        <ModalContent height="500px" width="85%">
-          <ModalHeader textDecoration={"underline"} fontStyle={"oblique"}>
-            Creators
-          </ModalHeader>
+        <ModalContent
+          color={"rgba(240, 80, 39, 1)"}
+          sx={{
+            opacity: 0.8,
+            backdropFilter: "blur(2px)",
+            backgroundImage:
+              "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 70%, rgba(0, 224, 255, .1))",
+            border: "1px solid rgba(240, 80, 39, .3)",
+          }}
+        >
+          <ModalHeader>Ad Details</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Grid templateColumns="repeat(5, 1fr)" gap={2}>
-              <GridItem colSpan={1}>
-                <Heading size="md">Name</Heading>
+            <Grid
+              templateColumns="repeat(2, 1fr)"
+              templateRows="repeat(3, 1fr)"
+              gap={2}
+            >
+              <GridItem rowSpan={3} colSpan={1}>
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${ad.Image}`}
+                  alt="Ad Image"
+                  h={40}
+                  width={40}
+                  borderRadius={12}
+                />
               </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="md">Followers</Heading>
+              <GridItem rowSpan={1} colSpan={1}>
+                <HStack>
+                  <Heading size="md">Advertiser:</Heading>
+                  <Text color={"brown"}>
+                    {ad.Advertiser.length > 20
+                      ? `${ad.Advertiser.substring(0, 20)}..`
+                      : ad.Advertiser}
+                  </Text>
+                </HStack>
               </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="md">Ad Cost</Heading>
+              <GridItem rowSpan={1} colSpan={1}>
+                <HStack>
+                  <Heading size="md">Title:</Heading>
+                  <Text color={"brown"}>{ad.Title}</Text>
+                </HStack>
               </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="md">Platforms: {""}</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Button colorScheme="green">Add Creator</Button>
+              <GridItem rowSpan={1} colSpan={1}>
+                <HStack>
+                  <Heading size="md">PickUpLine:</Heading>
+                  <Text color={"brown"}>{ad.PickUpLine}</Text>
+                </HStack>
               </GridItem>
             </Grid>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
-              Save
-            </Button>
-            <Button onClick={handleCreatorModalClose}>Close</Button>
+            <Button onClick={onClose}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

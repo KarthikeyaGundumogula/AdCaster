@@ -42,7 +42,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
   const [isCreatorModalOpen, setCreatorModalOpen] = React.useState(false);
   const [isAddAmountOpen, setAddAmountOpen] = React.useState(false);
 
-  const [ads, setAds] = useState([
+  const initialAds = [
     {
       title: "Campaign Title",
       value: "",
@@ -71,7 +71,8 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
       title: "Total Clicks",
       value: "",
     },
-  ]);
+  ];
+  const [ads, setAds] = useState(initialAds);
 
   useEffect(() => {
     async function getUser() {
@@ -89,41 +90,31 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
       `;
       const data = await getGraphData(query);
       if (data != undefined) {
-        let a = [
-          {
-            title: "Campaign Title",
-            value: "",
-          },
-          {
-            title: "Campaign Status",
-            value: data.data.data.ads[0].AdStatus ? "Online" : "Offline",
-          },
-          {
-            title: "Campaign Budget",
-            value: data.data.data.ads[0].TotalFunds,
-          },
-          {
-            title: "Current Funds",
-            value: data.data.data.ads[0].CurrentFunds,
-          },
-          {
-            title: "Total Views",
-            value: data.data.data.ads[0].TotalViews,
-          },
-          {
-            title: "Total Leads",
-            value: data.data.data.ads[0].TotalViews,
-          },
-          {
-            title: "Total Clicks",
-            value: data.data.data.ads[0].TotalClicks,
-          },
-        ];
+        let a = initialAds.map((ad, index) => {
+          switch (ad.title) {
+            case "Campaign Status":
+              return {
+                ...ad,
+                value: data.data.data.ads[0].AdStatus ? "Online" : "Offline",
+              };
+            case "Campaign Budget":
+              return { ...ad, value: data.data.data.ads[0].TotalFunds };
+            case "Current Funds":
+              return { ...ad, value: data.data.data.ads[0].CurrentFunds };
+            case "Total Views":
+              return { ...ad, value: data.data.data.ads[0].TotalViews };
+            case "Total Leads":
+              return { ...ad, value: data.data.data.ads[0].TotalViews };
+            case "Total Clicks":
+              return { ...ad, value: data.data.data.ads[0].TotalClicks };
+            default:
+              return ad;
+          }
+        });
         const res = await fetch(
-          "https://harlequin-reduced-macaw-748.mypinata.cloud/ipfs/QmayrtD5WD8CXDpYn9apvr8bRf2aCwKCZoTFtdDS1SPdkq"
+          `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/QmayrtD5WD8CXDpYn9apvr8bRf2aCwKCZoTFtdDS1SPdkq`
         );
         const title = await res.json();
-        console.log(title);
         a[0].value = title.title;
         setAds(a);
       }
