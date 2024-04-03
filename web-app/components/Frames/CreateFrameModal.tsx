@@ -18,6 +18,8 @@ import {
   Th,
   Td,
   Box,
+  FormControl,
+
 } from "@chakra-ui/react";
 
 interface CreateAdModalProps {
@@ -29,10 +31,20 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const [input1, setInput1] = useState("");
   const [input3, setInput3] = useState<File | null>(null);
   const [selectedAdId, setSelectedAdId] = useState("");
-  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
+  const [isAdModalOpen, setIsAdModalOpen] = useState(false);const [formState, setFormState] = useState({
+    frameTitle: "",
+    frameDescription: "",
+    framePost: null,
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const ads = [
     {
@@ -90,21 +102,35 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
           <ModalHeader>Create Frame</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <VStack spacing={2}>
-              <Input
-                placeholder="Ad-Id"
-                value={selectedAdId}
-                onClick={openAdModal}
-                onChange={() => {}}
-              />
-              <Input
-                type="file"
-                placeholder="Select your post"
-                value={input3 ? input3.name : ""}
-                onChange={handleInputChange3}
-              />
-              <Text>Your Frame URL</Text>
-            </VStack>
+            <form onSubmit={handleSubmit}>
+              <VStack spacing={2}>
+                <FormControl isRequired>
+                  <Input
+                    name="title"
+                    placeholder="Frame Title"
+                    value={formState.frameTitle}
+                    onChange={handleInputChange}
+                  />
+                </FormControl>
+                <FormControl isRequired>
+                  <Input
+                    name="description"
+                    placeholder="Frame Description"
+                    value={formState.frameDescription}
+                    onChange={handleInputChange}
+                  />
+                </FormControl>
+                <FormControl isRequired>
+                  <Input
+                    type="file"
+                    placeholder="Select your post"
+                    value={input3 ? input3.name : ""}
+                    onChange={handleInputChange3}
+                  />
+                </FormControl>
+                <Text onClick={() => navigator.clipboard.writeText("https://adcast.com/frames/1")}>Your Frame URL</Text>
+              </VStack>
+            </form>
           </ModalBody>
           <ModalFooter>
             <Button

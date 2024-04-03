@@ -102,6 +102,14 @@ const CreateAdModal: React.FC<CreateAdModalProps> = ({ isOpen, onClose }) => {
                 />
               </FormControl>
               <FormControl isRequired>
+                <Input
+                  name="url"
+                  placeholder="Ad Destination url"
+                  value={formState.adPickUpLine}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+              <FormControl isRequired>
                 <Input name="image" type="file" onChange={handleInputChange} />
               </FormControl>
             </VStack>

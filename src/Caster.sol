@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: UNLICENSED
+//SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.20;
 import "./Token.sol";
@@ -30,11 +30,12 @@ struct Publisher {
 }
 
 struct Frames {
-    string frameId;
+    string frameId; //frameID is the URI of the frame
     uint AdId;
     uint256 clicks;
     uint256 views;
     address publisher;
+    string cast;
 }
 
 contract Caster is Token, ERC1155Holder {
@@ -85,6 +86,7 @@ contract Caster is Token, ERC1155Holder {
         string frameId
     );
     event frameCreated(string frameId, address publisher, uint AdId);
+    event frameCasted(string frameId, string cast);
 
     constructor() {
         nativeTokenId = 0;
@@ -102,8 +104,25 @@ contract Caster is Token, ERC1155Holder {
             IsPublisher[msg.sender] == true,
             "You are not a publisher, please register as a publisher"
         );
-        frameIdToFrame[_frameId] = Frames(_frameId, _adId, 0, 0, msg.sender);
+        frameIdToFrame[_frameId] = Frames(
+            _frameId,
+            _adId,
+            0,
+            0,
+            msg.sender,
+            ""
+        );
         emit frameCreated(_frameId, msg.sender, _adId);
+    }
+
+    function castFrame(string memory _frameId, string memory _cast) public {
+        //this function casts the frame
+        require(
+            frameIdToFrame[_frameId].publisher == msg.sender,
+            "You are not the publisher of this frame"
+        );
+        frameIdToFrame[_frameId].cast = _cast;
+        emit frameCasted(_frameId, _cast);
     }
 
     function createAd(string memory _AdURI, uint256 _totalFunds) public {
