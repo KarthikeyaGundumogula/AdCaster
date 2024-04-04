@@ -1,13 +1,13 @@
 /* eslint-disable react/jsx-key */
 import { frames } from "./frames";
 import { Button } from "frames.js/next";
+import { NextApiRequest } from "next";
 
-const handler = frames(async (ctx) => {
+const handler = frames(async (ctx: NextApiRequest) => {
   const path = ctx.url.pathname;
 
   const cid = path.split("/")[2];
-  console.log(cid);
-  const imageURL = `https://harlequin-reduced-macaw-748.mypinata.cloud/ipfs/${cid}`;
+  const imageURL = `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${cid}`;
   function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }

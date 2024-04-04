@@ -18,42 +18,85 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import Header from "@/components/Header";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { SignInButton } from "@farcaster/auth-kit";
+import { Caster } from "@/utils/CasterContract";
+import { useParams } from "next/navigation";
+import Loading from "@/components/Props/Loading";
+import { formatUnits } from "ethers";
 
 const EarningsComponent = () => {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [txProcessing, setTxProcesssing] = useState(false);
+  const [isPublisher, setIsPublisher] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { addr } = useParams();
   const [tileData, setTileData] = useState([
-    {
-      title: "Total Ads",
-      value: "0.00",
-    },
-    {
-      title: "Total Earnings",
-      value: "0.00",
-    },
     {
       title: "ADCST Balance",
       value: "0.00",
     },
     {
-      title: "Total Publishers",
+      title: "Unclaimed Earnings",
       value: "0.00",
     },
     {
-      title: "Total Advertisers",
+      title: "Click Earnings",
       value: "0.00",
     },
     {
-      title: "Total Frames",
+      title: "Lead Earnings",
+      value: "0.00",
+    },
+    {
+      title: "Lead Charge",
+      value: "0.00",
+    },
+    {
+      title: "Click Charge",
       value: "0.00",
     },
   ]);
   const [formState, setFormState] = useState({
-    Name: "",
+    Address: "",
     FID: "",
     LeadCharge: "",
     ClickCharge: "",
   });
+
+  useEffect(() => {
+    async function getUser() {
+      setIsLoading(true);
+      const caster = await Caster();
+      const balance = await caster.balanceOf(addr, 0);
+      const publisherStatus = await caster.IsPublisher(addr);
+      const publisher = await caster.addressToPublisher(addr);
+      console.log(publisher[6]);
+      setIsPublisher(publisherStatus);
+      setTileData((prevData) => {
+        return prevData.map((item) => {
+          switch (item.title) {
+            case "ADCST Balance":
+              return { ...item, value: formatUnits(balance, 9) };
+            case "Unclaimed Earnings":
+              return { ...item, value: formatUnits(publisher[6], 9) };
+            case "Click Earnings":
+              return { ...item, value: formatUnits(publisher[4], 5) };
+            case "Lead Earnings":
+              return { ...item, value: formatUnits(publisher[5], 5) };
+            case "Lead Charge":
+              return { ...item, value: formatUnits(publisher[3], 5) };
+            case "Click Charge":
+              return { ...item, value: formatUnits(publisher[2], 5) };
+            default:
+              return item;
+          }
+        });
+      });
+      setIsLoading(false);
+    }
+    getUser();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormState({
@@ -71,21 +114,48 @@ const EarningsComponent = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formState);
+    setTxProcesssing(true);
+    try {
+      const caster = await Caster();
+      const tx = await caster.createPublisher(
+        formState.ClickCharge,
+        formState.LeadCharge,
+        formState.FID
+      );
+      await tx.wait();
+    } catch (error) {
+      console.log(error);
+    }
+    setTxProcesssing(false);
     handleRegisterModalClose();
   };
 
+  const handleClaimEarnigs = async () => {
+    setTxProcesssing(true);
+    try {
+      const caster = await Caster();
+      const tx = await caster.claimEarnings();
+      await tx.wait();
+    } catch (error) {
+      console.log(error);
+    }
+    setTxProcesssing(false);
+  };
   return (
     <>
+      {isLoading && <Loading />}
       <Header />
       <Center paddingTop={3}>
-        <Button
-          variant={"outline"}
-          colorScheme="orange"
-          onClick={handleRegisterModalOpen}
-        >
-          Become Publisher
-        </Button>
+        {!isPublisher && (
+          <Button
+            variant={"outline"}
+            colorScheme="orange"
+            onClick={handleRegisterModalOpen}
+          >
+            Become Publisher
+          </Button>
+        )}
+        {/* <SignInButton /> */}
       </Center>
       <Center>
         <Grid
@@ -124,6 +194,17 @@ const EarningsComponent = () => {
           ))}
         </Grid>
       </Center>
+      <Center>
+        <Button
+          variant={"outline"}
+          colorScheme="orange"
+          isLoading={txProcessing}
+          loadingText="transferring Funds"
+          onClick={handleClaimEarnigs}
+        >
+          Claim Earnigs
+        </Button>
+      </Center>
       <Modal isOpen={isRegisterOpen} onClose={handleRegisterModalClose}>
         <ModalOverlay />
         <ModalContent
@@ -143,9 +224,9 @@ const EarningsComponent = () => {
               <VStack spacing={2}>
                 <FormControl isRequired>
                   <Input
-                    name="Name"
-                    placeholder="name"
-                    value={formState.Name}
+                    name="Address"
+                    placeholder="Address associated with FID"
+                    value={formState.Address}
                     onChange={handleInputChange}
                   />
                 </FormControl>
@@ -159,25 +240,32 @@ const EarningsComponent = () => {
                 </FormControl>
                 <FormControl isRequired>
                   <Input
-                    name="leadCharge"
+                    name="LeadCharge"
                     placeholder="Charge per Lead"
                     type="number"
                     value={formState.LeadCharge}
                     onChange={handleInputChange}
+                    required
                   />
                 </FormControl>
                 <FormControl isRequired>
                   <Input
-                    name="clcikCharge"
+                    name="ClickCharge"
                     placeholder="Charge per Click"
-                    type="number"
                     value={formState.ClickCharge}
                     onChange={handleInputChange}
+                    required
                   />
                 </FormControl>
               </VStack>
               <ModalFooter>
-                <Button colorScheme="orange" variant="outline" type="submit">
+                <Button
+                  colorScheme="orange"
+                  variant="outline"
+                  type="submit"
+                  isLoading={txProcessing}
+                  loadingText="Adding.."
+                >
                   Submit
                 </Button>
                 <Button onClick={handleRegisterModalClose} colorScheme="red">

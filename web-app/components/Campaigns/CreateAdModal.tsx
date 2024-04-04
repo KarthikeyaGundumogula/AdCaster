@@ -12,10 +12,9 @@ import {
   VStack,
   FormControl,
 } from "@chakra-ui/react";
-import { pinFileToIPFS } from "@/utils/saveFileToIPFS";
+import { saveFileToIPFS } from "@/utils/saveFileToIPFS";
 import { saveMetaDataToIPFS } from "@/utils/saveMetaDataToIPFS";
-import { BrowserProvider, Contract } from "ethers";
-import { Address, ABI } from "@/Constants/ContractDetails";
+import { Caster } from "@/utils/CasterContract";
 
 interface CreateAdModalProps {
   isOpen: boolean;
@@ -23,12 +22,20 @@ interface CreateAdModalProps {
 }
 
 const CreateAdModal: React.FC<CreateAdModalProps> = ({ isOpen, onClose }) => {
+  const [txProcessing, setTxProcesssing] = useState(false);
+  const [adImage, setAdImage] = useState<File>();
   const [formState, setFormState] = useState({
     adTitle: "",
     adPickUpLine: "",
     totalBudget: "",
-    image: null,
+    url: "",
   });
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setAdImage(e.target.files[0]);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormState({
@@ -39,22 +46,28 @@ const CreateAdModal: React.FC<CreateAdModalProps> = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (formState.image) {
-      const ipfsHash = await pinFileToIPFS(formState.image);
+    if (adImage) {
+      setTxProcesssing(true);
+      console.log(adImage);
+      const ipfsHash = await saveFileToIPFS(adImage);
       console.log(ipfsHash);
-      const obj = {
-        title: formState.adTitle,
-        pickUpLine: formState.adPickUpLine,
-        image: ipfsHash,
-      };
-      const metaDataHash = await saveMetaDataToIPFS(obj);
-      console.log(metaDataHash);
-      const provider = new BrowserProvider((window as any).ethereum);
-      const signer = await provider.getSigner();
-      const server = new Contract(Address, ABI, signer);
-      const tx = await server.createAd(metaDataHash, formState.totalBudget);
-      await tx.wait();
-      onClose();
+      if (ipfsHash) {
+        const obj = {
+          title: formState.adTitle,
+          pickUpLine: formState.adPickUpLine,
+          image: ipfsHash,
+        };
+        const metaDataHash = await saveMetaDataToIPFS(obj);
+        console.log(metaDataHash);
+        try {
+          const caster = await Caster();
+          const tx = await caster.createAd(metaDataHash, formState.totalBudget);
+          await tx.wait();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      setTxProcesssing(false);
     }
   };
 
@@ -105,12 +118,12 @@ const CreateAdModal: React.FC<CreateAdModalProps> = ({ isOpen, onClose }) => {
                 <Input
                   name="url"
                   placeholder="Ad Destination url"
-                  value={formState.adPickUpLine}
+                  value={formState.url}
                   onChange={handleInputChange}
                 />
               </FormControl>
               <FormControl isRequired>
-                <Input name="image" type="file" onChange={handleInputChange} />
+                <Input name="image" type="file" onChange={handleImageUpload} />
               </FormControl>
             </VStack>
             <ModalFooter>
@@ -118,8 +131,8 @@ const CreateAdModal: React.FC<CreateAdModalProps> = ({ isOpen, onClose }) => {
                 colorScheme="orange"
                 variant="outline"
                 type="submit"
-                isLoading={false}
-                loadingText="Creating"
+                isLoading={txProcessing}
+                loadingText="Creating.."
               >
                 Submit
               </Button>{" "}
