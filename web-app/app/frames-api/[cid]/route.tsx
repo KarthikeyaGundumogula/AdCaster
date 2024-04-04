@@ -1,9 +1,8 @@
 /* eslint-disable react/jsx-key */
 import { frames } from "./frames";
 import { Button } from "frames.js/next";
-import { NextApiRequest } from "next";
 
-const handler = frames(async (ctx: NextApiRequest) => {
+const handler = frames(async (ctx) => {
   const path = ctx.url.pathname;
 
   const cid = path.split("/")[2];
