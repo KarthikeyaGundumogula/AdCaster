@@ -38,7 +38,7 @@ const EarningsComponent = () => {
     },
     {
       title: "Unclaimed Earnings",
-      value: "0.00",
+      value: "0",
     },
     {
       title: "Click Earnings",
@@ -77,17 +77,17 @@ const EarningsComponent = () => {
         return prevData.map((item) => {
           switch (item.title) {
             case "ADCST Balance":
-              return { ...item, value: formatUnits(balance, 9) };
+              return { ...item, value: formatUnits(balance, 0) };
             case "Unclaimed Earnings":
-              return { ...item, value: formatUnits(publisher[6], 9) };
+              return { ...item, value: formatUnits(publisher[6], 0) };
             case "Click Earnings":
-              return { ...item, value: formatUnits(publisher[4], 5) };
+              return { ...item, value: formatUnits(publisher[4], 0) };
             case "Lead Earnings":
-              return { ...item, value: formatUnits(publisher[5], 5) };
+              return { ...item, value: formatUnits(publisher[5], 0) };
             case "Lead Charge":
-              return { ...item, value: formatUnits(publisher[3], 5) };
+              return { ...item, value: formatUnits(publisher[3], 0) };
             case "Click Charge":
-              return { ...item, value: formatUnits(publisher[2], 5) };
+              return { ...item, value: formatUnits(publisher[2], 0) };
             default:
               return item;
           }
@@ -222,6 +222,7 @@ const EarningsComponent = () => {
           isLoading={txProcessing}
           loadingText="transferring Funds"
           onClick={handleClaimEarnigs}
+          isDisabled={tileData[1].value < "0"}
         >
           Claim Earnigs
         </Button>

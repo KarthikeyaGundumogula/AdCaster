@@ -76,7 +76,7 @@ export function handleCampaignStarted(event: CampaignStartedEvent): void {
 export function handleCampaignStopped(event: CampaignStoppedEvent): void {
   let entity = Ad.load(event.params.id.toString());
   if (entity != null) {
-    entity.AdStatus = true;
+    entity.AdStatus = false;
     entity.save();
   } else {
     return;

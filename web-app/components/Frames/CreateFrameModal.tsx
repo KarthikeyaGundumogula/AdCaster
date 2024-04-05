@@ -1,4 +1,5 @@
-import { useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 import {
   Button,
   Modal,
@@ -19,8 +20,9 @@ import {
   Td,
   Box,
   FormControl,
-
 } from "@chakra-ui/react";
+import { useParams } from "next/navigation";
+import { getGraphData } from "@/utils/GetData";
 
 interface CreateAdModalProps {
   isOpen: boolean;
@@ -33,11 +35,56 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
 }) => {
   const [input3, setInput3] = useState<File | null>(null);
   const [selectedAdId, setSelectedAdId] = useState("");
-  const [isAdModalOpen, setIsAdModalOpen] = useState(false);const [formState, setFormState] = useState({
+  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
+  const [formState, setFormState] = useState({
     frameTitle: "",
     frameDescription: "",
-    framePost: null,
   });
+  const { id } = useParams();
+
+  const [ads, setAds] = useState<
+    { id: string; title: string; subText: string }[]
+  >([]);
+  useEffect(() => {
+    let isMounted = true;
+    async function getData() {
+      let query = `{
+      publishers(where: {Publisher: "${id}"}) {
+        Ads
+      }
+    }`;
+      let data = await getGraphData(query);
+      const ids = data?.data.data.publishers[0].Ads;
+      ids.map(async (id: string) => {
+        console.log(id);
+        let query = `{
+          ads(where: {AdId: "${id}"}) {
+            AdId
+            AdData
+          }
+        }`;
+        let data = await getGraphData(query);
+        console.log(data);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${data?.data.data.ads[0].AdData}`
+        );
+        const d = await res.json();
+        if (!data?.data.data.ads) return;
+        setAds((ads) => {
+          const ad = {
+            id: data?.data.data.ads[0].AdId,
+            title: d.title,
+            subText: d.pickUpLine,
+          };
+          if (isMounted && !ads.find((a) => a.id === ad.id)) {
+            return [...ads, ad];
+          }
+          return ads;
+        });
+      });
+    }
+    getData();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormState({
@@ -46,34 +93,16 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
     });
   };
 
-  const ads = [
-    {
-      id: "ad1",
-      field2: "Field 2 Value",
-      field3: "Field 3 Value",
-      field4: "Field 4 Value",
-    },
-    {
-      id: "ad2",
-      field2: "Field 2 Value",
-      field3: "Field 3 Value",
-      field4: "Field 4 Value",
-    },
-    {
-      id: "ad3",
-      field2: "Field 2 Value",
-      field3: "Field 3 Value",
-      field4: "Field 4 Value",
-    },
-  ];
-
   const handleInputChange3 = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setInput3(e.target.files[0]);
     }
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(formState);
+  };
 
   // Event handlers
   const handleAdSelect = (adId: string) => {
@@ -81,7 +110,7 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
     setIsAdModalOpen(false);
   };
 
-  const openAdModal = () => {
+  const openAdModal = async () => {
     setIsAdModalOpen(true);
   };
 
@@ -106,7 +135,7 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
               <VStack spacing={2}>
                 <FormControl isRequired>
                   <Input
-                    name="title"
+                    name="frameTitle"
                     placeholder="Frame Title"
                     value={formState.frameTitle}
                     onChange={handleInputChange}
@@ -114,7 +143,7 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
                 </FormControl>
                 <FormControl isRequired>
                   <Input
-                    name="description"
+                    name="frameDescription"
                     placeholder="Frame Description"
                     value={formState.frameDescription}
                     onChange={handleInputChange}
@@ -122,27 +151,41 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
                 </FormControl>
                 <FormControl isRequired>
                   <Input
+                    type="text"
+                    placeholder="Select Ad"
+                    value={selectedAdId}
+                    readOnly
+                    onClick={openAdModal}
+                  />
+                </FormControl>
+                <FormControl isRequired>
+                  <Input
                     type="file"
                     placeholder="Select your post"
-                    value={input3 ? input3.name : ""}
                     onChange={handleInputChange3}
                   />
                 </FormControl>
-                <Text onClick={() => navigator.clipboard.writeText("https://adcast.com/frames/1")}>Your Frame URL</Text>
+                <Text
+                  onClick={() =>
+                    navigator.clipboard.writeText("https://adcast.com/frames/1")
+                  }
+                >
+                  Your Frame URL
+                </Text>
               </VStack>
+              <ModalFooter>
+                <Button
+                  colorScheme="orange"
+                  variant={"outline"}
+                  mr={3}
+                  type="submit"
+                >
+                  Create
+                </Button>
+                <Button onClick={onClose}>Cancel</Button>
+              </ModalFooter>
             </form>
           </ModalBody>
-          <ModalFooter>
-            <Button
-              colorScheme="orange"
-              variant={"outline"}
-              mr={3}
-              onClick={handleSubmit}
-            >
-              Create
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
       <Modal
@@ -169,18 +212,16 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
                 <Tr>
                   <Th>Ad ID</Th>
                   <Th>Title</Th>
-                  <Th>Lead Reward</Th>
-                  <Th>Click ReWard</Th>
+                  <Th>Sub-Text</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {/* Replace this with your actual data */}
                 {ads.map((ad) => (
-                  <Tr key={ad.id} onClick={() => handleAdSelect(ad.id)}>
+                  <Tr key={ad.title} onClick={() => handleAdSelect(ad.id)}>
                     <Td>{ad.id}</Td>
-                    <Td>{ad.field2}</Td>
-                    <Td>{ad.field3}</Td>
-                    <Td>{ad.field4}</Td>
+                    <Td>{ad.title}</Td>
+                    <Td>{ad.subText}</Td>
                   </Tr>
                 ))}
               </Tbody>

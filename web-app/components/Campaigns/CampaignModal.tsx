@@ -23,6 +23,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { getGraphData } from "@/utils/GetData";
+import { Caster } from "@/utils/CasterContract";
 
 interface CampaignModalProps {
   isOpen: boolean;
@@ -41,6 +42,11 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
   )}/200/300`;
   const [isCreatorModalOpen, setCreatorModalOpen] = React.useState(false);
   const [isAddAmountOpen, setAddAmountOpen] = React.useState(false);
+  const [creators, setCreators] = useState([] as any);
+  const [txProcessing, setTxprocessing] = useState(false);
+  const [addedCreators, setAddedCreators] = useState([] as any);
+  const [addedCreatorsModalOpen, setAddedCreatorsModalOpen] = useState(false);
+  const [addAmount, setAddAmount] = useState("");
 
   const initialAds = [
     {
@@ -86,6 +92,12 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
           TotalViews
           CurrentFunds
         }
+        publishers(first: 10) {
+          PublisherFId
+          ViewReward
+          ClickReward
+          Publisher
+        }
       }
       `;
       const data = await getGraphData(query);
@@ -117,10 +129,11 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
         const title = await res.json();
         a[0].value = title.title;
         setAds(a);
+        setCreators(data.data.data.publishers);
       }
     }
     getUser();
-  }, []);
+  }, [AdId]);
 
   const handleAddCreatorModal = () => {
     setCreatorModalOpen(true);
@@ -138,11 +151,70 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
     setAddAmountOpen(true);
   };
 
-  const creators = [
-    { id: 1, field2: "Creator 1", field3: "10", field4: "5" },
-    { id: 2, field2: "Creator 2", field3: "20", field4: "10" },
-    { id: 3, field2: "Creator 3", field3: "15", field4: "8" },
-  ];
+  const handleCampaignStatus = async () => {
+    setTxprocessing(true);
+    if (ads[1].value === "Online") {
+      try {
+        const caster = await Caster();
+        const tx = await caster.stopCampaign(AdId);
+        await tx.wait();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    if (ads[1].value === "Offline") {
+      try {
+        const caster = await Caster();
+        const tx = await caster.startCampaign(AdId);
+        await tx.wait();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    setTxprocessing(false);
+  };
+
+  const handleAddCreator = async (Publisher: string) => {
+    console.log(Publisher);
+    setTxprocessing(true);
+    try {
+      const caster = await Caster();
+      const tx = await caster.SubscribetoPublisher(AdId, Publisher);
+      await tx.wait();
+    } catch (e) {
+      console.log(e);
+    }
+    setTxprocessing(false);
+  };
+
+  const handleGetAddedCreatorsModalOpen = () => {
+    setAddedCreatorsModalOpen(true);
+    const query = ` {
+      ads(where: { AdId: ${AdId} } ) {
+        Publishers
+    }
+  }`;
+    getGraphData(query).then((data) => {
+      setAddedCreators(data?.data?.data?.ads[0]?.Publishers);
+    });
+  };
+
+  const handleAddedCreatorsModalClose = () => {
+    setAddedCreatorsModalOpen(false);
+  };
+
+  const handleAddFunds = async () => {
+    setTxprocessing(true);
+    try {
+      const caster = await Caster();
+      const tx = await caster.addFundsToCampaign(AdId, addAmount);
+      await tx.wait();
+    } catch (e) {
+      console.log(e);
+    }
+    setTxprocessing(false);
+    handleAddAmountModalClose();
+  };
 
   return (
     <>
@@ -190,6 +262,15 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
                   </HStack>
                 </GridItem>
               ))}
+              <GridItem rowSpan={1} colSpan={2}>
+                <Button
+                  colorScheme="blue"
+                  variant={"outline"}
+                  onClick={handleGetAddedCreatorsModalOpen}
+                >
+                  Added Creators{" "}
+                </Button>
+              </GridItem>
             </Grid>
             <Center>
               <HStack>
@@ -204,10 +285,17 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
                   colorScheme="green"
                   variant={"outline"}
                   onClick={handleAddCreatorModal}
+                  isDisabled={ads[1].value === "Offline"}
                 >
                   Add Creator
                 </Button>
-                <Button colorScheme="red" variant={"outline"}>
+                <Button
+                  isLoading={txProcessing}
+                  loadingText="processing.."
+                  colorScheme="red"
+                  variant={"outline"}
+                  onClick={handleCampaignStatus}
+                >
                   {ads[1].value === "Online"
                     ? "Stop Campaign"
                     : "Start Campaign"}
@@ -236,10 +324,22 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
           <ModalHeader>Add Funds</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input placeholder="Amount" type="Number" />
+            <Input
+              placeholder="Amount"
+              type="Number"
+              onChange={(e) => {
+                setAddAmount(e.target.value);
+              }}
+            />
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="green" variant={"outline"}>
+            <Button
+              colorScheme="green"
+              variant={"outline"}
+              isLoading={txProcessing}
+              loadingText="adding.."
+              onClick={handleAddFunds}
+            >
               Add
             </Button>
             <Button onClick={handleAddAmountModalClose}>Close</Button>
@@ -250,7 +350,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
       <Modal
         isOpen={isCreatorModalOpen}
         onClose={handleCreatorModalClose}
-        size="3xl"
+        size="lg"
         isCentered={true}
       >
         <ModalOverlay />
@@ -265,7 +365,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
           }}
         >
           <ModalHeader textDecoration={"underline"} fontStyle={"oblique"}>
-            Creators
+            Add Creators
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -274,9 +374,6 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
                 <Tr>
                   <Th textAlign={"center"} fontWeight={"bold"}>
                     Creator ID
-                  </Th>
-                  <Th textAlign={"center"} fontWeight={"bold"}>
-                    Followers
                   </Th>
                   <Th textAlign={"center"} fontWeight={"bold"}>
                     Lead Cost
@@ -289,20 +386,22 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
               </Thead>
               <Tbody>
                 {/* Replace this with your actual data */}
-                {creators.map((creator) => (
-                  <Tr key={creator.id}>
-                    <Td textAlign={"center"}>{creator.id}</Td>
-                    <Td textAlign={"center"}>{creator.field2}</Td>
-                    <Td textAlign={"center"}>{creator.field3}</Td>
-                    <Td textAlign={"center"}>{creator.field4}</Td>
+                {creators.map((creator: any) => (
+                  <Tr key={creator.PublisherFIdFID}>
+                    <Td textAlign={"center"}>{creator.PublisherFId}</Td>
+                    <Td textAlign={"center"}>{creator.ViewReward}</Td>
+                    <Td textAlign={"center"}>{creator.ClickReward}</Td>
                     <Td>
                       <Button
-                        isLoading={false}
-                        loadingText="Adding"
+                        isLoading={txProcessing}
+                        loadingText="adding.."
                         colorScheme="green"
                         variant="outline"
+                        onClick={() => {
+                          handleAddCreator(creator.Publisher);
+                        }}
                       >
-                        Add Creator
+                        Add
                       </Button>
                     </Td>
                   </Tr>
@@ -312,6 +411,47 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
           </ModalBody>
           <ModalFooter>
             <Button onClick={handleCreatorModalClose}>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal
+        isOpen={addedCreatorsModalOpen}
+        onClose={handleAddedCreatorsModalClose}
+      >
+        <ModalOverlay />
+        <ModalContent
+          color={"rgba(240, 80, 39, 1)"}
+          sx={{
+            opacity: 0.5,
+            backdropFilter: "blur(4px)",
+            backgroundImage:
+              "radial-gradient(circle farthest-side at 100% 0, rgba(2, 239, 225, .09), rgba(46, 29, 246, .03) 50%, rgba(0, 224, 255, .1))",
+            border: "2px solid rgba(240, 80, 39, .3)",
+          }}
+        >
+          <ModalHeader>Added Creators</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Table variant="simple">
+              <Thead>
+                <Tr>
+                  <Th textAlign={"center"} fontWeight={"bold"}>
+                    Creator Address
+                  </Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {/* Replace this with your actual data */}
+                {addedCreators.map((creator: any) => (
+                  <Tr key={creator}>
+                    <Td textAlign={"center"}>{creator}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={handleAddedCreatorsModalClose}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

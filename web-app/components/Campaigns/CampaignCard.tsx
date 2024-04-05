@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Image, Heading, Grid, GridItem } from "@chakra-ui/react";
 import CampaignModal from "./CampaignModal";
+import { getGraphData } from "@/utils/GetData";
 
 interface AppCardProps {
   data: string;
@@ -10,9 +11,10 @@ interface AppCardProps {
 }
 
 const AdCard: React.FC<AppCardProps> = ({ data, status, AdId }) => {
-  const logo = `https://picsum.photos/seed/${encodeURIComponent(AdId)}/200/300`;
+  const [logo, setLogo] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const [creators, setCreators] = useState([] as any);
 
   const handleFrameClick = () => {
     setIsOpen(true);
@@ -24,14 +26,19 @@ const AdCard: React.FC<AppCardProps> = ({ data, status, AdId }) => {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch(
-        "https://harlequin-reduced-macaw-748.mypinata.cloud/ipfs/QmayrtD5WD8CXDpYn9apvr8bRf2aCwKCZoTFtdDS1SPdkq"
-      );
-      const data = await response.json();
-      setTitle(data.title);
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${data}`
+        );
+        const res = await response.json();
+        setLogo(`${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${res.image}`);
+        setTitle(res.title);
+      } catch (e) {
+        console.log(e);
+      }
     }
     fetchData();
-  }, [AdId]);
+  }, [data]);
 
   return (
     <>
