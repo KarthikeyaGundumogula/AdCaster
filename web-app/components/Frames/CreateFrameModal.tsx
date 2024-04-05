@@ -18,11 +18,16 @@ import {
   Tr,
   Th,
   Td,
-  Box,
+  useClipboard,
+  HStack,
+  Heading,
   FormControl,
 } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 import { getGraphData } from "@/utils/GetData";
+import { Caster } from "@/utils/CasterContract";
+import { saveFileToIPFS } from "@/utils/saveFileToIPFS";
+import { saveMetaDataToIPFS } from "@/utils/saveMetaDataToIPFS";
 
 interface CreateAdModalProps {
   isOpen: boolean;
@@ -36,6 +41,11 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
   const [input3, setInput3] = useState<File | null>(null);
   const [selectedAdId, setSelectedAdId] = useState("");
   const [isAdModalOpen, setIsAdModalOpen] = useState(false);
+  const [frameCreating, setFrameCreating] = useState(false);
+  const [frameUrl, setFrameUrl] = useState(
+    "https://ad-caster.vercel.app/frames-api/frame-id"
+  );
+  const { hasCopied: hasUrlCopied, onCopy: onUrlCopy } = useClipboard(frameUrl);
   const [formState, setFormState] = useState({
     frameTitle: "",
     frameDescription: "",
@@ -53,35 +63,37 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
         Ads
       }
     }`;
-      let data = await getGraphData(query);
-      const ids = data?.data.data.publishers[0].Ads;
-      ids.map(async (id: string) => {
-        console.log(id);
-        let query = `{
+      try {
+        let data = await getGraphData(query);
+        const ids = data?.data.data.publishers[0].Ads;
+        ids.map(async (id: string) => {
+          let query = `{
           ads(where: {AdId: "${id}"}) {
             AdId
             AdData
           }
         }`;
-        let data = await getGraphData(query);
-        console.log(data);
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${data?.data.data.ads[0].AdData}`
-        );
-        const d = await res.json();
-        if (!data?.data.data.ads) return;
-        setAds((ads) => {
-          const ad = {
-            id: data?.data.data.ads[0].AdId,
-            title: d.title,
-            subText: d.pickUpLine,
-          };
-          if (isMounted && !ads.find((a) => a.id === ad.id)) {
-            return [...ads, ad];
-          }
-          return ads;
+          let data = await getGraphData(query);
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${data?.data.data.ads[0].AdData}`
+          );
+          const d = await res.json();
+          if (!data?.data.data.ads) return;
+          setAds((ads) => {
+            const ad = {
+              id: data?.data.data.ads[0].AdId,
+              title: d.title,
+              subText: d.pickUpLine,
+            };
+            if (isMounted && !ads.find((a) => a.id === ad.id)) {
+              return [...ads, ad];
+            }
+            return ads;
+          });
         });
-      });
+      } catch (e) {
+        console.error(e);
+      }
     }
     getData();
   }, []);
@@ -101,7 +113,24 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formState);
+    setFrameCreating(true);
+    const ipfsHash = await saveFileToIPFS(input3!);
+    const obj = {
+      title: formState.frameTitle,
+      description: formState.frameDescription,
+      adId: selectedAdId,
+      image: ipfsHash,
+    };
+    const metaDataHash = await saveMetaDataToIPFS(obj);
+    try {
+      const caster = await Caster();
+      let tx = await caster.createFrame(metaDataHash, selectedAdId);
+      await tx.wait();
+    } catch (e) {
+      console.log(e);
+    }
+    setFrameUrl(`https://ad-caster.vercel.app/frames-api/${metaDataHash}`);
+    setFrameCreating(false);
   };
 
   // Event handlers
@@ -165,16 +194,25 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
                     onChange={handleInputChange3}
                   />
                 </FormControl>
-                <Text
-                  onClick={() =>
-                    navigator.clipboard.writeText("https://adcast.com/frames/1")
-                  }
-                >
-                  Your Frame URL
-                </Text>
+                <HStack>
+                  <Heading size="md">FrameUrl:</Heading>
+                  <Text
+                    color={"#01011f"}
+                    onClick={onUrlCopy}
+                    cursor="pointer"
+                    fontStyle={"italic"}
+                  >
+                    {frameUrl.length > 13
+                      ? `${frameUrl.substring(0, 25)}..`
+                      : frameUrl}
+                  </Text>
+                  {hasUrlCopied && <Text color={"black"}>Copied!</Text>}
+                </HStack>
               </VStack>
               <ModalFooter>
                 <Button
+                  isLoading={frameCreating}
+                  loadingText="Creating.."
                   colorScheme="orange"
                   variant={"outline"}
                   mr={3}

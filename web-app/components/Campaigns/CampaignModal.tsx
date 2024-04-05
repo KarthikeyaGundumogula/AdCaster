@@ -385,7 +385,6 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
                 </Tr>
               </Thead>
               <Tbody>
-                {/* Replace this with your actual data */}
                 {creators.map((creator: any) => (
                   <Tr key={creator.PublisherFIdFID}>
                     <Td textAlign={"center"}>{creator.PublisherFId}</Td>

@@ -8,9 +8,9 @@ dataSources:
     name: CasterV2
     network: base-sepolia
     source:
-      address: "0x9e693113D1cfeDc61B64cc8ccB3A4a081D6228c8"
+      address: "0xEAE147687Bbb51049903afBa23B67f532825F0Fd"
       abi: CasterV2
-      startBlock: 8222477
+      startBlock: 8271839
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

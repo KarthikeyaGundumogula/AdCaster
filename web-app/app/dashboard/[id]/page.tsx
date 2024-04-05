@@ -89,12 +89,7 @@ const Dashboard: React.FC = () => {
           <Box alignItems="center" padding={2} paddingLeft={8}>
             <Grid templateColumns="repeat(4, 2fr)" gap={4}>
               {frames.map((frame: { FrameId: string }) => (
-                <FrameCard
-                  frameId={frame.FrameId}
-                  status="active"
-                  title="test"
-                  key={frame.FrameId}
-                />
+                <FrameCard frameId={frame.FrameId} key={frame.FrameId} />
               ))}
             </Grid>
           </Box>

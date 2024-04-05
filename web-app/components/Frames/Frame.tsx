@@ -1,20 +1,36 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Image, Heading, Grid, GridItem } from "@chakra-ui/react";
 import FrameModal from "./FrameModal";
 
 interface AppCardProps {
-  title: string;
-  status: string;
   frameId: string;
 }
 
-const FrameCard: React.FC<AppCardProps> = ({ title, status, frameId }) => {
-  const logo = `https://picsum.photos/seed/${encodeURIComponent(
+const FrameCard: React.FC<AppCardProps> = ({ frameId }) => {
+  const log = `https://picsum.photos/seed/${encodeURIComponent(
     frameId
   )}/200/300`;
 
   const [isOpen, setIsOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [logo, setLogo] = useState(log);
+
+  useEffect(() => {
+    async function getData() {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${frameId}`
+        );
+        const res = await response.json();
+        setLogo(`${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${res.image}`);
+        setTitle(res.title);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    getData();
+  });
 
   const handleFrameClick = () => {
     setIsOpen(true);

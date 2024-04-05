@@ -19,7 +19,7 @@ import {
 } from "@chakra-ui/react";
 import Header from "@/components/Header";
 import React, { useState, useEffect } from "react";
-import { SignInButton } from "@farcaster/auth-kit";
+// import { SignInButton } from "@farcaster/auth-kit";
 import { Caster } from "@/utils/CasterContract";
 import { useParams } from "next/navigation";
 import Loading from "@/components/Props/Loading";
@@ -71,7 +71,6 @@ const EarningsComponent = () => {
       const balance = await caster.balanceOf(addr, 0);
       const publisherStatus = await caster.IsPublisher(addr);
       const publisher = await caster.addressToPublisher(addr);
-      console.log(publisher[6]);
       setIsPublisher(publisherStatus);
       setTileData((prevData) => {
         return prevData.map((item) => {

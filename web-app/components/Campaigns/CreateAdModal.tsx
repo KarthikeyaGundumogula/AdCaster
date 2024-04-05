@@ -55,6 +55,7 @@ const CreateAdModal: React.FC<CreateAdModalProps> = ({ isOpen, onClose }) => {
         const obj = {
           title: formState.adTitle,
           pickUpLine: formState.adPickUpLine,
+          destinationUrl: formState.url,
           image: ipfsHash,
         };
         const metaDataHash = await saveMetaDataToIPFS(obj);

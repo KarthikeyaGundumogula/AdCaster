@@ -144,7 +144,7 @@ contract Caster is Token, ERC1155Holder {
     function startCampaign(uint256 Id) public {
         //this function starts the campaign
         require(
-            campaignStatus[Id] == CampaignStatus.CREATED,
+            campaignStatus[Id] != CampaignStatus.RUNNING,
             "No campaign found"
         );
         require(
