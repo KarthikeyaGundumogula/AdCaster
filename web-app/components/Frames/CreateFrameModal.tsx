@@ -45,9 +45,7 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
   const [adSubText, setAdSubText] = useState("");
   const [adDestinationUrl, setAdDestinationUrl] = useState("");
   const [adImage, setAdImage] = useState("");
-  const [frameUrl, setFrameUrl] = useState(
-    ""
-  );
+  const [frameUrl, setFrameUrl] = useState("");
   const { hasCopied: hasUrlCopied, onCopy: onUrlCopy } = useClipboard(frameUrl);
   const [formState, setFormState] = useState({
     frameTitle: "",
@@ -137,6 +135,7 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
     };
     console.log(obj);
     const metaDataHash = await saveMetaDataToIPFS(obj);
+    setFrameUrl(`https://ad-caster.vercel.app/frames-api/${metaDataHash}`);
     try {
       const caster = await Caster();
       let tx = await caster.createFrame(metaDataHash, selectedAdId);

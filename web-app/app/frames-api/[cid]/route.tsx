@@ -9,9 +9,13 @@ const handler = frames(async ({ ctx, url, state }) => {
     `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${cid}`
   );
   const res = await data.json();
+  const currentState = state;
   const imageURL = `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${res.image}`;
   const target = `${cid}/Ad/${res.adId}`;
-  console.log(res);
+  const updatedState = {
+    ...currentState,
+    AdDestinataion: res.adDestinationUrl,
+  };
   return {
     image: imageURL,
     buttons: [
@@ -27,6 +31,7 @@ const handler = frames(async ({ ctx, url, state }) => {
         {res.adSubText}
       </Button>,
     ],
+    state: updatedState,
   };
 });
 

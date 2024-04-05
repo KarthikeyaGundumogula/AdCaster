@@ -37,9 +37,9 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
   AdId,
 }) => {
   let title = "Frame";
-  const logo = `https://picsum.photos/seed/${encodeURIComponent(
-    title
-  )}/200/300`;
+  const [logo, setLogo] = useState(
+    `https://picsum.photos/seed/${encodeURIComponent(title)}/200/300`
+  );
   const [isCreatorModalOpen, setCreatorModalOpen] = React.useState(false);
   const [isAddAmountOpen, setAddAmountOpen] = React.useState(false);
   const [creators, setCreators] = useState([] as any);
@@ -128,6 +128,9 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
         );
         const title = await res.json();
         a[0].value = title.title;
+        setLogo(
+          `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${title.image}`
+        );
         setAds(a);
         setCreators(data.data.data.publishers);
       }
@@ -175,7 +178,6 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
   };
 
   const handleAddCreator = async (Publisher: string) => {
-    console.log(Publisher);
     setTxprocessing(true);
     try {
       const caster = await Caster();
