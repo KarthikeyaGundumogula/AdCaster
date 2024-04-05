@@ -39,7 +39,7 @@ const Dashboard: React.FC = () => {
         <Text fontSize="lg">
           AdCaster aim to revolutionize online advertising by cutting out the
           middleman and using base blockchain technology to create a more
-          transparent and privacy-focused system. This means users wouldn't be
+          transparent and privacy-focused system. This means users wouldnt be
           tracked and bombarded with irrelevant ads, while publishers and
           advertisers would connect directly, with payments secured by ADCST
           Tokens and ad visibility determined by an auction system.
@@ -77,12 +77,12 @@ const Dashboard: React.FC = () => {
           the unique capabilities of the Farcaster ecosystem. Farcaster is a
           rapidly growing DeSoc platform that prioritizes user privacy and data
           ownership. This focus on decentralization aligns perfectly with
-          AdCaster's mission to create a more transparent and user-centric
+          AdCasters mission to create a more transparent and user-centric
           advertising experience within the Web3 space. Unlike traditional
           social media platforms, Farcaster users control their own data and can
           choose how they interact with advertisers. This empowers users and
           fosters trust within the ecosystem, creating a valuable environment
-          for both advertisers and publishers. Additionally, Farcaster's
+          for both advertisers and publishers. Additionally, Farcasters
           innovative features, such as Frames, enable richer and more engaging
           content formats that are ideal for advertising
         </Text>
@@ -119,12 +119,12 @@ const Dashboard: React.FC = () => {
           the unique capabilities of the Farcaster ecosystem. Farcaster is a
           rapidly growing DeSoc platform that prioritizes user privacy and data
           ownership. This focus on decentralization aligns perfectly with
-          AdCaster's mission to create a more transparent and user-centric
+          AdCasters mission to create a more transparent and user-centric
           advertising experience within the Web3 space. Unlike traditional
           social media platforms, Farcaster users control their own data and can
           choose how they interact with advertisers. This empowers users and
           fosters trust within the ecosystem, creating a valuable environment
-          for both advertisers and publishers. Additionally, Farcaster's
+          for both advertisers and publishers. Additionally, Farcasters
           innovative features, such as Frames, enable richer and more engaging
           content formats that are ideal for advertising
         </Text>
@@ -157,7 +157,7 @@ const Dashboard: React.FC = () => {
           Unveiling The Power : How Frames Drive AD-Caster
         </Heading>
         <Text fontSize="lg">
-          AdCaster seamlessly integrates with Farcaster's innovative Frames
+          AdCaster seamlessly integrates with Farcasters innovative Frames
           feature, unlocking a new dimension for advertisers. Frames allow
           creators to curate multimedia experiences that combine text, images,
           and videos. This dynamic format fosters deeper user engagement,

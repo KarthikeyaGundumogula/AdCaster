@@ -26,8 +26,8 @@ export const POST = frames(
       await tx.wait();
       tx = await contract.transferClickReward(AdId, frameId);
       return redirect(
-        // `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${state.AdDestinataion}`
-        "https://www.amazon.com/"
+        `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${state.AdDestinataion}`
+        // "https://www.amazon.com/"
       );
     }
     return {
