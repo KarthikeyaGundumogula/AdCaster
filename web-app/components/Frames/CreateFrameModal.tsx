@@ -43,7 +43,7 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
   const [isAdModalOpen, setIsAdModalOpen] = useState(false);
   const [frameCreating, setFrameCreating] = useState(false);
   const [frameUrl, setFrameUrl] = useState(
-    "https://ad-caster.vercel.app/frames-api/frame-id"
+    ""
   );
   const { hasCopied: hasUrlCopied, onCopy: onUrlCopy } = useClipboard(frameUrl);
   const [formState, setFormState] = useState({
