@@ -141,6 +141,18 @@ const EarningsComponent = () => {
     }
     setTxProcesssing(false);
   };
+
+  const handleGetADCSTTokens = async () => {
+    setTxProcesssing(true);
+    try {
+      const caster = await Caster();
+      const tx = await caster.getAdTokens();
+      await tx.wait();
+    } catch (e) {
+      console.log(e);
+    }
+    setTxProcesssing(false);
+  };
   return (
     <>
       {isLoading && <Loading />}
@@ -156,6 +168,15 @@ const EarningsComponent = () => {
           </Button>
         )}
         {/* <SignInButton /> */}
+        <Button
+          isLoading={txProcessing}
+          loadingText="transferring.."
+          variant={"outline"}
+          colorScheme="red"
+          onClick={handleGetADCSTTokens}
+        >
+          Get ADCSTs
+        </Button>
       </Center>
       <Center>
         <Grid
