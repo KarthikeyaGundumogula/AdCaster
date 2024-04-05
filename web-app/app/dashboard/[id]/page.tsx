@@ -45,7 +45,7 @@ const Dashboard: React.FC = () => {
       }
     }
     getUser();
-  }, [user]);
+  }, [path.id]);
   const handleCreateFrame = () => {
     setCreateFrameModal(true);
   };

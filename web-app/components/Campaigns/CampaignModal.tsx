@@ -78,7 +78,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
     async function getUser() {
       const query = `  
       {
-        ads( where: {AdId: "2"}) {
+        ads( where: {AdId: ${AdId} } ) {
           TotalFunds
           AdData
           AdStatus
@@ -112,7 +112,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({
           }
         });
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/QmayrtD5WD8CXDpYn9apvr8bRf2aCwKCZoTFtdDS1SPdkq`
+          `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${data.data.data.ads[0].AdData}`
         );
         const title = await res.json();
         a[0].value = title.title;
