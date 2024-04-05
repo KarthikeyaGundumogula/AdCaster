@@ -2,22 +2,29 @@
 import { frames } from "./frames";
 import { Button } from "frames.js/next";
 
-const handler = frames(async (ctx) => {
-  const path = ctx.url.pathname;
-
+const handler = frames(async ({ ctx, url, state }) => {
+  const path = url.pathname;
   const cid = path.split("/")[2];
-  const imageURL = `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${cid}`;
-  function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${cid}`
+  );
+  const res = await data.json();
+  const imageURL = `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${res.image}`;
+  const target = `${cid}/Ad/${res.adId}`;
+  console.log(res);
   return {
     image: imageURL,
     buttons: [
-      // With query params
-      // Without query params
-      <Button action="post" target="/Ad/adid">
-        Go to Ad
+      <Button
+        action="post"
+        target={{
+          pathname: target,
+          query: {
+            adImage: res.adImage,
+          },
+        }}
+      >
+        {res.adSubText}
       </Button>,
     ],
   };

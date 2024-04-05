@@ -197,6 +197,7 @@ contract Caster is Token, ERC1155Holder {
         );
         IdToCampaign[_id].totalFunds += amount;
         IdToCampaign[_id].currentFunds += amount;
+        _safeTransferFrom(msg.sender, address(this), nativeTokenId, amount);
         emit fundsAdded(_id, amount);
     }
 
@@ -263,11 +264,10 @@ contract Caster is Token, ERC1155Holder {
 
     function serveAd(
         uint256 _id,
-        address _publisher,
         string memory _frameId
     ) public returns (string memory adURI) {
         //this function serves the Ad to the user
-
+        address _publisher = frameIdToFrame[_frameId].publisher;
         IdToCampaign[_id].currentFunds -= addressToPublisher[_publisher]
             .showReward;
         IdToCampaign[_id].views += 1;
@@ -287,16 +287,13 @@ contract Caster is Token, ERC1155Holder {
         return uri(_id);
     }
 
-    function transferClickReward(
-        uint256 _adID,
-        address _publisher,
-        string memory _frameId
-    ) public {
+    function transferClickReward(uint256 _adID, string memory _frameId) public {
         //this function transfers the click reward to the publisher
         IdToCampaign[_adID].totalFunds -= addressToPublisher[_publisher]
             .leadReward;
         IdToCampaign[_adID].currentFunds -= addressToPublisher[_publisher]
             .leadReward;
+        address _publisher = frameIdToFrame[_frameId].publisher;
         addressToPublisher[_publisher].totalLeadEarnings += addressToPublisher[
             _publisher
         ].leadReward;

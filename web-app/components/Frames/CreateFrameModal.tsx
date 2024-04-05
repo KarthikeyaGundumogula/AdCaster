@@ -42,6 +42,9 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
   const [selectedAdId, setSelectedAdId] = useState("");
   const [isAdModalOpen, setIsAdModalOpen] = useState(false);
   const [frameCreating, setFrameCreating] = useState(false);
+  const [adSubText, setAdSubText] = useState("");
+  const [adDestinationUrl, setAdDestinationUrl] = useState("");
+  const [adImage, setAdImage] = useState("");
   const [frameUrl, setFrameUrl] = useState(
     ""
   );
@@ -53,7 +56,13 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
   const { id } = useParams();
 
   const [ads, setAds] = useState<
-    { id: string; title: string; subText: string }[]
+    {
+      id: string;
+      title: string;
+      subText: string;
+      destinationUrl: string;
+      adImage: string;
+    }[]
   >([]);
   useEffect(() => {
     let isMounted = true;
@@ -84,6 +93,8 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
               id: data?.data.data.ads[0].AdId,
               title: d.title,
               subText: d.pickUpLine,
+              adImage: d.image,
+              destinationUrl: d.destinationUrl,
             };
             if (isMounted && !ads.find((a) => a.id === ad.id)) {
               return [...ads, ad];
@@ -119,8 +130,12 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
       title: formState.frameTitle,
       description: formState.frameDescription,
       adId: selectedAdId,
+      adSubText: adSubText,
+      adImage: adImage,
+      adDestinationUrl: adDestinationUrl,
       image: ipfsHash,
     };
+    console.log(obj);
     const metaDataHash = await saveMetaDataToIPFS(obj);
     try {
       const caster = await Caster();
@@ -134,8 +149,16 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
   };
 
   // Event handlers
-  const handleAdSelect = (adId: string) => {
+  const handleAdSelect = (
+    adId: string,
+    adSubtext: string,
+    adUrl: string,
+    adImage: string
+  ) => {
     setSelectedAdId(adId);
+    setAdSubText(adSubtext);
+    setAdDestinationUrl(adUrl);
+    setAdImage(adImage);
     setIsAdModalOpen(false);
   };
 
@@ -256,7 +279,17 @@ const CreateFrameModal: React.FC<CreateAdModalProps> = ({
               <Tbody>
                 {/* Replace this with your actual data */}
                 {ads.map((ad) => (
-                  <Tr key={ad.title} onClick={() => handleAdSelect(ad.id)}>
+                  <Tr
+                    key={ad.title}
+                    onClick={() =>
+                      handleAdSelect(
+                        ad.id,
+                        ad.subText,
+                        ad.destinationUrl,
+                        ad.adImage
+                      )
+                    }
+                  >
                     <Td>{ad.id}</Td>
                     <Td>{ad.title}</Td>
                     <Td>{ad.subText}</Td>
