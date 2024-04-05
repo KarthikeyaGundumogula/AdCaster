@@ -5,12 +5,12 @@ schema:
   file: schema.graphql
 dataSources:
   - kind: ethereum
-    name: Caster
+    name: CasterV2
     network: base-sepolia
     source:
-      address: "0xecFBf18e6A318309B717b657Ea711ddA8946c3fe"
-      abi: Caster
-      startBlock: 7742160
+      address: "0x9e693113D1cfeDc61B64cc8ccB3A4a081D6228c8"
+      abi: CasterV2
+      startBlock: 8222477
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -20,8 +20,8 @@ dataSources:
         - Frame
         - Publisher
       abis:
-        - name: Caster
-          file: Caster/abis/Caster.json
+        - name: CasterV2
+          file: CasterV2/abis/CasterV2.json
       eventHandlers:
         - event: AdCreated(uint256,uint256,string,address)
           handler: handleAdCreated
@@ -35,12 +35,14 @@ dataSources:
           handler: handlePublisherCreated
         - event: adShowed(uint256,address,uint256,string)
           handler: handleadShowed
+        - event: frameCasted(string,string)
+          handler: handleframeCasted
+        - event: frameCreated(string,address,uint256)
+          handler: handleframeCreated
         - event: fundsAdded(uint256,uint256)
           handler: handlefundsAdded
         - event: fundsRemoved(uint256,uint256)
           handler: handlefundsRemoved
         - event: leadGenerated(uint256,address,uint256,string)
           handler: handleleadGenerated
-        - event: frameCreated(string,address,uint256)
-          handler: handleframeCreated
-      file: Caster/Caster.wasm
+      file: CasterV2/CasterV2.wasm

@@ -5,13 +5,14 @@ import {
   PublisherAdded as PublisherAddedEvent,
   PublisherCreated as PublisherCreatedEvent,
   adShowed as adShowedEvent,
+  frameCasted as frameCastedEvent,
+  frameCreated as frameCreatedEvent,
   fundsAdded as fundsAddedEvent,
   fundsRemoved as fundsRemovedEvent,
   leadGenerated as leadGeneratedEvent,
-  frameCreated as frameCreatedEvent,
-} from "../generated/Caster/Caster";
+} from "../generated/CasterV2/CasterV2";
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
-import { Ad, Frame, Publisher } from "../generated/schema";
+import { Ad, Publisher, Frame } from "../generated/schema";
 
 export function handleAdCreated(event: AdCreatedEvent): void {
   let ad = new Ad(event.params.id.toString());
@@ -62,21 +63,6 @@ export function handlePublisherCreated(event: PublisherCreatedEvent): void {
   publisher.save();
 }
 
-export function handlePublisherAdded(event: PublisherAddedEvent): void {
-  let ad = Ad.load(event.params.id.toString());
-  let publisher = Publisher.load(event.params.publisher.toString());
-  if (ad != null && publisher != null) {
-    let publishers = ad.Publishers;
-    publishers.push(event.params.publisher);
-    ad.Publishers = publishers;
-    ad.save();
-    let ads = publisher.Ads;
-    ads.push(event.params.id);
-    publisher.Ads = ads;
-    publisher.save();
-  }
-}
-
 export function handleCampaignStarted(event: CampaignStartedEvent): void {
   let entity = Ad.load(event.params.id.toString());
   if (entity != null) {
@@ -94,6 +80,21 @@ export function handleCampaignStopped(event: CampaignStoppedEvent): void {
     entity.save();
   } else {
     return;
+  }
+}
+
+export function handlePublisherAdded(event: PublisherAddedEvent): void {
+  let ad = Ad.load(event.params.id.toString());
+  let publisher = Publisher.load(event.params.publisher.toString());
+  if (ad != null && publisher != null) {
+    let publishers = ad.Publishers;
+    publishers.push(event.params.publisher);
+    ad.Publishers = publishers;
+    ad.save();
+    let ads = publisher.Ads;
+    ads.push(event.params.id);
+    publisher.Ads = ads;
+    publisher.save();
   }
 }
 
@@ -115,6 +116,10 @@ export function handleadShowed(event: adShowedEvent): void {
     inc = BigInt.fromString("1");
     totalViewsFrame = totalViewsFrame.plus(inc);
     frame.TotalViews = totalViewsFrame;
+    let earnings = frame.TotalEarnings;
+    inc = publisher.ViewReward;
+    earnings = earnings.plus(inc);
+    frame.TotalEarnings = earnings;
     frame.save();
     let totalViewsPublisher = publisher.TotalDisplayEarnings;
     inc = publisher.ViewReward;
@@ -127,33 +132,11 @@ export function handleadShowed(event: adShowedEvent): void {
   }
 }
 
-export function handleleadGenerated(event: leadGeneratedEvent): void {
-  let ad = Ad.load(event.params.id.toString());
+export function handleframeCasted(event: frameCastedEvent): void {
   let frame = Frame.load(event.params.frameId);
-  let publisher = Publisher.load(event.params.publisher.toString());
-  if (ad != null && frame != null && publisher != null) {
-    let inc = BigInt.fromString("1");
-    let totalClicks = ad.TotalClicks;
-    totalClicks = totalClicks.plus(inc);
-    ad.TotalClicks = totalClicks;
-    let currentFunds = ad.CurrentFunds;
-    inc = publisher.ClickReward;
-    currentFunds = currentFunds.minus(inc);
-    ad.CurrentFunds = currentFunds;
-    ad.save();
-    let totalClicksFrame = frame.TotalClicks;
-    inc = BigInt.fromString("1");
-    totalClicksFrame = totalClicksFrame.plus(inc);
-    frame.TotalClicks = totalClicksFrame;
+  if (frame != null) {
+    frame.CastedURL = event.params.cast;
     frame.save();
-    let totalClicksPublisher = publisher.TotalEarnings;
-    inc = publisher.ClickReward;
-    totalClicksPublisher = totalClicksPublisher.plus(inc);
-    publisher.TotalEarnings = totalClicksPublisher;
-    let unClaimEarnings = publisher.UnClaimedEarnings;
-    unClaimEarnings = unClaimEarnings.plus(inc);
-    publisher.UnClaimedEarnings = unClaimEarnings;
-    publisher.save();
   }
 }
 
@@ -182,5 +165,39 @@ export function handlefundsRemoved(event: fundsRemovedEvent): void {
     ad.CurrentFunds = CurrentFunds;
     ad.TotalFunds = totalFunds;
     ad.save();
+  }
+}
+
+export function handleleadGenerated(event: leadGeneratedEvent): void {
+  let ad = Ad.load(event.params.id.toString());
+  let frame = Frame.load(event.params.frameId);
+  let publisher = Publisher.load(event.params.publisher.toString());
+  if (ad != null && frame != null && publisher != null) {
+    let inc = BigInt.fromString("1");
+    let totalClicks = ad.TotalClicks;
+    totalClicks = totalClicks.plus(inc);
+    ad.TotalClicks = totalClicks;
+    let currentFunds = ad.CurrentFunds;
+    inc = publisher.ClickReward;
+    currentFunds = currentFunds.minus(inc);
+    ad.CurrentFunds = currentFunds;
+    ad.save();
+    let totalClicksFrame = frame.TotalClicks;
+    inc = BigInt.fromString("1");
+    totalClicksFrame = totalClicksFrame.plus(inc);
+    frame.TotalClicks = totalClicksFrame;
+    let earnings = frame.TotalEarnings;
+    inc = publisher.ClickReward;
+    earnings = earnings.plus(inc);
+    frame.TotalEarnings = earnings;
+    frame.save();
+    let totalClicksPublisher = publisher.TotalEarnings;
+    inc = publisher.ClickReward;
+    totalClicksPublisher = totalClicksPublisher.plus(inc);
+    publisher.TotalEarnings = totalClicksPublisher;
+    let unClaimEarnings = publisher.UnClaimedEarnings;
+    unClaimEarnings = unClaimEarnings.plus(inc);
+    publisher.UnClaimedEarnings = unClaimEarnings;
+    publisher.save();
   }
 }

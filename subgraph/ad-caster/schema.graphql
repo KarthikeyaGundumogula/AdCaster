@@ -37,6 +37,8 @@ type Frame @entity {
   AdId: BigInt! #uint256
   TotalViews: BigInt! #uint256
   TotalClicks: BigInt! #uint256
+  TotalEarnings: BigInt! #uint256
+  CastedURL: String! #string
   BlockNumber: BigInt! #uint256
   BlockTimestamp: BigInt! #uint256
   TransactionHash: Bytes! #bytes32
