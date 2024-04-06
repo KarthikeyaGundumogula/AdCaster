@@ -16,9 +16,9 @@ AdCaster operates on a transparent and creator-centric model, empowering creator
 
 3. **Frame System for Engaging Ad Delivery:** AdCaster utilizes a unique "Frame" system for ad delivery, consisting of two components:
    - **Attention-Grabbing Subtext/Pickup Line:** This initial snippet piques the user's interest, compelling them to click for more information.
-     ![Alt Text](image_url)
+     ![Frame_Post]("https://github.com/KarthikeyaGundumogula/AdCaster/blob/main/web-app/public/Assets/Screenshot%202024-04-06%20023535.png")
    - **Full Ad Display:** Clicking the subtext reveals the complete advertisement, facilitating user engagement and interaction.
-     ![Alt Text](image_url)
+     ![Frame_AD]("https://github.com/KarthikeyaGundumogula/AdCaster/blob/main/web-app/public/Assets/Screenshot%202024-04-06%20023512.png")
 4. **Monetization Opportunities for Creators:** AdCaster empowers creators with two earning mechanisms:
 
    - **Lead Charge:** Creators receive a reward whenever a user clicks on the subtext, indicating initial ad engagement.
